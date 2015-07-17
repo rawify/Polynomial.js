@@ -41,8 +41,8 @@ Examples
 Polynomial.setField("Q");
 Polynomial("3/2x^2-4x").mod("5x"); // 0
 
-Polynomial.setField("C");
-Polynomial("25x^9").gcd("5ix"); // x
+Polynomial.setField("Z11");
+Polynomial("3x^2+x+7").gcd("3x^2+x+7"); // x^2+4x+6
 
 Polynomial.setField("Z7");
 Polynomial("9x^2+4").pow(3); // x^6+6x^4+5x^2+1
