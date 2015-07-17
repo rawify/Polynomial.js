@@ -9,6 +9,7 @@
  * TODO factor()
  * TODO dispersion()
  * TODO toHorner()
+ * TODO sqrt()
  */
 (function(root) {
 
