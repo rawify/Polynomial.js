@@ -32,23 +32,31 @@ Polynomial.js is held general in order to operate on various fields. [Fraction.j
 
 * ℚ: Rational numbers supported by [Fraction.js](https://github.com/infusion/Fraction.js) 
 * ℂ: Complex numbers supported by [Complex.js](https://github.com/infusion/Complex.js)
-* ℤn: Ring of integers mod n
+* ℤ_p: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
 
 Examples
 ---
-```
+```javascript
 Polynomial.setField("Q");
 Polynomial("3/2x^2-4x").mod("5x"); // 0
 
 Polynomial.setField("C");
-Polynomial("25x^9").gcd("5ix"); // 5x
+Polynomial("25x^9").gcd("5ix"); // x
 
 Polynomial.setField("Z7");
 Polynomial("9x^2+4").pow(3); // x^6+6x^4+5x^2+1
 
 Polynomial.setField("R");
 Polynomial("3x^3-1").mul(4); // 12x^3-4
+
+// Second derivative
+Polynomial.setField("Q");
+Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
+
+// Integrated polynomial
+Polynomial.setField("Q");
+Polynomial("3x^2").integrate(); // x^3
 ```
 
 Functions
@@ -68,11 +76,27 @@ Returns the product of the actual polynomial and the parameter n
 
 Polynomial addmul(x, y)
 ---
-Adds the product of x and y to the current number
+Adds the product of x and y to the actual number
 
 Polynomial div(n)
 ---
 Returns the quotient of the actual polynomial and the parameter n
+
+Polynomial neg(n)
+---
+Returns the negated polynomial
+
+Polynomial lc()
+---
+Gets the leading coefficient
+
+Polynomial lm()
+---
+Gets the leading monomial
+
+Polynomial monic()
+---
+Divide all coefficients of the polynomial by lc()
 
 Polynomial derive(n)
 ---
@@ -94,10 +118,6 @@ Polynomial gcd(n)
 ---
 Returns the greatest common divisor of two polynomials
 
-<!--Polynomial inverse()
----
-Returns the inverse of the actual polynomial (1 / poly)-->
-
 String toString()
 ---
 Generates a string representation of the actual polynomial. This makes use of the `toString()` function of the field.
@@ -113,6 +133,16 @@ Formats the actual polynomial to a [Horner Scheme](https://en.wikipedia.org/wiki
 Polynomial clone()
 ---
 Creates a copy of the actual Polynomial object
+
+Polynomial::setField(x)
+---
+Sets the field globally. Choose one of the following strings for `x`:
+
+- "R": real numbers
+- "Q": rational numbers
+- "C": complex numbers
+- "Zp": with p a prime number, like "Z7"
+- or an object with the field operators. See examples folders for bigint
 
 Exceptions
 ===

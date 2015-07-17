@@ -411,7 +411,7 @@
     };
 
     /**
-     * Gets the leading coefficient
+     * Gets the leading monomial
      * 
      * @returns {Polynomial}
      */
