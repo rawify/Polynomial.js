@@ -22,7 +22,7 @@ var p = new Polynomial("3x^2").add("-x^2"); // 2x^2
 Second derivative of polynomial
 ---
 ```javascript
-var p = new Polynomial("5+3x^3+6x^5").derivative(2); // 120x^3+18x
+var p = new Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
 ```
 
 Fields
@@ -50,9 +50,9 @@ Polynomial("9x^2+4").pow(3); // x^6+6x^4+5x^2+1
 Polynomial.setField("R");
 Polynomial("3x^3-1").mul(4); // 12x^3-4
 
-// Second derivative
+// Derivative of polynomial
 Polynomial.setField("Q");
-Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
+Polynomial("5+3x^3+6x^5").derive(); // 30x^4+9x^2
 
 // Integrated polynomial
 Polynomial.setField("Q");

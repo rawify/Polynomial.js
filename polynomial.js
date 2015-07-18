@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v0.0.1 03/07/2015
+ * @license Polinomial.js v1.0.0 03/07/2015
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
