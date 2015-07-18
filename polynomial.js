@@ -5,12 +5,6 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  **/
 
-/**
- * TODO factor()
- * TODO dispersion()
- * TODO toHorner()
- * TODO sqrt()
- */
 (function(root) {
 
     "use strict";
