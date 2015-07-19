@@ -25,6 +25,43 @@ Second derivative of polynomial
 var p = new Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
 ```
 
+Parser
+===
+
+Any function (see below) as well as the constructor of the *Polynomial* class parses its input like this.
+
+You can pass either Objects, Doubles or Strings.
+
+Objects
+---
+```javascript
+new Polynomial({'3': 4, '5': '9'}); // 9x^5+4x^3
+new Polynomial([1,2,3]); //3x^2+2x^2+x
+```
+
+Doubles
+---
+```javascript
+new Polynomial(55); // 55x^0
+```
+
+Strings
+---
+```javascript
+new Polynomial("98x^2+4+23x^4");
+```
+The string parser passes every coefficient directly to the field parser, which allows to pass complex and rational coefficients as well:
+
+```javascript
+// Example with complex numbers
+Polynomial.setField("C");
+new Polynomial("98x^2+i+23ix^4");
+
+// Example with rational nubers
+Polynomial.setField("R");
+new Polynomial("5/3x^3+4/3x");
+```
+
 Fields
 ===
 
