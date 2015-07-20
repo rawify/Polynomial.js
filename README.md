@@ -199,7 +199,7 @@ or
 npm install polynomial.js
 ```
 
-Using Polynomial.js at the browser
+Using Polynomial.js with the browser
 ===
     <script src="fraction.js"></script> <!-- Needed for field/ring Q -->
     <script src="complex.js"></script> <!-- Needed for field C -->
