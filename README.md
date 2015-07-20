@@ -210,7 +210,7 @@ Using Polynomial.js with the browser
     </script>
 
 
-Using Complex.js with require.js
+Using Polynomial.js with require.js
 ===
     <script src="require.js"></script>
     <script>
