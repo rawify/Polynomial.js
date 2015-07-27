@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.0.0 03/07/2015
+ * @license Polinomial.js v1.0.2 03/07/2015
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -672,22 +672,47 @@
 
                 if (Complex && val instanceof Complex) {
 
-                    // Skip if it's zero
-                    if (val['r'] === 0 && val['i'] === 0)
-                        continue;
+                    // Add real part
+                    if (val['r'] !== 0) {
 
-                    // Separate by +
-                    if (str !== "" && (val['r'] > 0 || val['r'] === 0 && val['i'] > 0)) {
-                        str += "+";
+                        if (str !== "" && val['r'] > 0) {
+                            str += "+";
+                        }
+
+                        if (val['r'] === -1 && i !== 0) {
+                            str += "-";
+                        } else if (val['r'] !== 1 || i === 0) {
+                            str += val['r'];
+                        }
+
+                        // Add exponent if necessary, no DRY, let's feed gzip
+                        if (i === 1)
+                            str += "x";
+                        else if (i !== 0)
+                            str += "x^" + i;
                     }
 
-                    if (val['r'] === -1 && val['i'] === 0 && i !== 0)
-                        str += "-";
-                    else
+                    // Add imaginary part
+                    if (val['i'] !== 0) {
 
-                    // Add number if it's not a "1" or the first position
-                    if (!(val['r'] === 1 && val['i'] === 0) || i === 0)
-                        str += cur[fn] ? cur[fn]() : cur['toString']();
+                        if (str !== "" && val['i'] > 0) {
+                            str += "+";
+                        }
+
+                        if (val['i'] === -1) {
+                            str += "-";
+                        } else if (val['i'] !== 1) {
+                            str += val['i'];
+                        }
+
+                        str += "i";
+
+                        // Add exponent if necessary, no DRY, let's feed gzip
+                        if (i === 1)
+                            str += "x";
+                        else if (i !== 0)
+                            str += "x^" + i;
+                    }
 
                 } else {
 
@@ -709,13 +734,13 @@
                     // Add number if it's not a "1" or the first position
                     if (val !== 1 || i === 0)
                         str += cur[fn] ? cur[fn]() : cur['toString']();
-                }
 
-                // Add exponent if necessary
-                if (i === 1)
-                    str += "x";
-                else if (i !== 0)
-                    str += "x^" + i;
+                    // Add exponent if necessary, no DRY, let's feed gzip
+                    if (i === 1)
+                        str += "x";
+                    else if (i !== 0)
+                        str += "x^" + i;
+                }
             }
 
             if (str === "")

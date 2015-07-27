@@ -1,7 +1,7 @@
 
 var assert = require('assert');
 
-var Poly = require('../polynomial');
+var Poly = require('../polynomial.min');
 
 var tests = [
     {f: "C", o: "add", a: "-1x^3-1x^2-1x-1", b: 0, r: "-x^3-x^2-x-1"},
@@ -61,6 +61,7 @@ var tests = [
     {f: 'R', o: 'derive', a: '3x^2', b: 4, r: '0'},
     {f: 'Q', o: 'derive', a: '3x^2', b: 5, r: '0'},
     {f: 'Q', o: 'pow', a: '3x', b: 9, r: '19683x^9'},
+    {f: 'C', o: 'add', a: '3x+ix', b: "3ix^2+x^2", r: 'x^2+3ix^2+3x+ix'},
     {f: 'Q', o: 'div', a: '3x^4+2x^3+x^2-4', b: '2x^2-4', r: '1.5x^2+x+3.5'},
     {f: 'Q', o: 'mod', a: '3x^4+2x^3+x^2-4', b: '2x^2-4', r: '4x+10'},
     {f: 'Q', o: 'pow', a: '3x^2', b: 9, r: '19683x^18'},
