@@ -30,7 +30,7 @@ Parser
 
 Any function (see below) as well as the constructor of the *Polynomial* class parses its input like this.
 
-You can pass either Objects, Doubles or Strings.
+You can pass either Objects, Doubles or Strings. Make sure strings don't contain any white-spaces or brackets. The parser doesn't analyse the string recursively.
 
 Objects
 ---
