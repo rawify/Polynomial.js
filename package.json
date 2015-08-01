@@ -6,7 +6,7 @@
     "bugs": "https://github.com/infusion/Polynomial.js/issues",
     "description": "A polynomial library",
     "keywords": ["math", "poly", "polynomial", "number", "complex", "rational"],
-    "author": "Robert Eisele <robert@xarg.org>",
+    "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "polynomial",
     "readmeFilename": "README.md",
     "licenses": [{
