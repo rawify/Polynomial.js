@@ -10,7 +10,7 @@
     },
     "keywords": ["math", "poly", "polynomial", "number", "complex", "rational"],
     "authors": [
-        "Robert Eisele <robert@xarg.org>"
+        "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)"
     ],
     "license": [
         "MIT",
