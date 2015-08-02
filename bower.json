@@ -8,7 +8,7 @@
         "fraction.js": "*",
         "complex.js": "*"
     },
-    "keywords": ["math", "poly", "polynomial", "number", "complex", "rational"],
+    "keywords": ["math", "poly", "polynomial", "number", "complex", "rational", "parser"],
     "authors": [
         "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)"
     ],
