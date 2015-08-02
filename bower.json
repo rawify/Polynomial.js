@@ -21,6 +21,8 @@
         "url": "git://github.com/infusion/Polynomial.js.git"
     },
     "ignore": [
-        "tests"
+        "tests",
+        ".travis.yml",
+        "package.json"
     ]
 }
