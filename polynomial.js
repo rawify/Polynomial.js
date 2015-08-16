@@ -623,6 +623,23 @@
         }
         return new Polynomial(ret);
     };
+    
+    /**
+     * Calculate the sum of the polynomial for value x
+     * 
+     * @param {number} x The number x
+     * @returns {number} The sum of the polynomial
+     */
+    Polynomial.prototype['result'] = function(x) {
+        
+        var poly = this['coeff'];
+        
+        var sum = 0;
+        for (var i in poly) {
+            sum = FIELD['add'](sum, FIELD['mul'](poly[i], FIELD['pow'](x, i)));
+        }
+        return sum;
+    };
 
     function isNull(r) {
 
@@ -908,5 +925,5 @@
 
         root['Polynomial'] = Polynomial;
     }
-
+    
 })(this);

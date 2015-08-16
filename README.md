@@ -143,6 +143,10 @@ Polynomial integrate(n)
 ---
 Returns the n-th integration of the polynomial
 
+mixed result(x)
+---
+Returns the sum of the polynomial with value x. Type for x must be a valid value for the given field.
+
 Polynomial pow(exp)
 ---
 Returns the power of the actual polynomial, raised to an integer exponent.
