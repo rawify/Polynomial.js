@@ -159,6 +159,10 @@ Polynomial gcd(n)
 ---
 Returns the greatest common divisor of two polynomials
 
+Number degree()
+---
+Returns the degree of the polynomial
+
 String toString()
 ---
 Generates a string representation of the actual polynomial. This makes use of the `toString()` function of the field.

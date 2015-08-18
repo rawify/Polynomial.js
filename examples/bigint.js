@@ -1,4 +1,5 @@
 
+var Polynomial = require('../polynomial.js');
 var bigInt = require("big-integer");
 
 Polynomial.setField({

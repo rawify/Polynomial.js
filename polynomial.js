@@ -276,13 +276,16 @@
                     x = x['coeff'];
                 }
 
-                // Handles Arrays the same way
-                for (var i in x) {
+                if (x instanceof Fraction || x instanceof Complex) {
+                    ret[0] = x;
+                } else
+                    // Handles Arrays the same way
+                    for (var i in x) {
 
-                    if (!FIELD['empty'](x[i])) {
-                        ret[i] = x[i];
+                        if (!FIELD['empty'](x[i])) {
+                            ret[i] = x[i];
+                        }
                     }
-                }
                 return ret;
 
             case  "number":
@@ -623,7 +626,7 @@
         }
         return new Polynomial(ret);
     };
-    
+
     /**
      * Calculate the sum of the polynomial for value x
      * 
@@ -631,9 +634,9 @@
      * @returns {number} The sum of the polynomial
      */
     Polynomial.prototype['result'] = function(x) {
-        
+
         var poly = this['coeff'];
-        
+
         var sum = 0;
         for (var i in poly) {
             sum = FIELD['add'](sum, FIELD['mul'](poly[i], FIELD['pow'](x, i)));
@@ -799,6 +802,16 @@
     };
 
     /**
+     * Returns the degree of the polynomial
+     * 
+     * @returns {number}
+     */
+    Polynomial.prototype['degree'] = function() {
+
+        return degree(this['coeff']);
+    };
+
+    /**
      * Set the field globally
      * 
      * @param {string|Object} field One of: C (complex), Q (rational), R (real) or an object with methods for field
@@ -925,5 +938,5 @@
 
         root['Polynomial'] = Polynomial;
     }
-    
+
 })(this);
