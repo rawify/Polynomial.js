@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.0.2 03/07/2015
+ * @license Polinomial.js v1.0.3 03/07/2015
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -276,7 +276,7 @@
                     x = x['coeff'];
                 }
 
-                if (x instanceof Fraction || x instanceof Complex) {
+                if (Fraction && x instanceof Fraction || Complex && x instanceof Complex) {
                     ret[0] = x;
                 } else
                     // Handles Arrays the same way
