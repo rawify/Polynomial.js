@@ -119,6 +119,15 @@ Polynomial div(n)
 ---
 Returns the quotient of the actual polynomial and the parameter n
 
+There is a global variable to enable division tracing like this, if you want to output details:
+
+```javascript
+Polynomial.trace = true;
+new Polynomial("x^4+3x^3+2x^2+6x")
+        .div("x+3");
+console.log(Polynomial.trace)
+```
+
 Polynomial neg(n)
 ---
 Returns the negated polynomial

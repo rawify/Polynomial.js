@@ -77,6 +77,9 @@
         }
         this['coeff'] = parse(x);
     }
+    
+    // Trace poly div steps
+    Polynomial['trace'] = null;
 
     /**
      * Calculates the modular inverse
@@ -236,6 +239,10 @@
 
         var i = degree(x);
         var j = degree(y);
+        
+        if (Polynomial['trace'] !== null) {
+            Polynomial['trace'] = [];
+        }
 
         while (i >= j) {
 
@@ -243,6 +250,10 @@
 
             for (var k in y) {
                 x[+k + i - j] = FIELD['sub'](x[+k + i - j] || 0, FIELD['mul'](y[k] || 0, tmp));
+            }
+            
+            if (Polynomial['trace'] !== null) {
+                Polynomial['trace'].push(new Polynomial(x));
             }
 
             if (i === (k = degree(x))) { // No reduction - fail; abuse "k" for a moment
