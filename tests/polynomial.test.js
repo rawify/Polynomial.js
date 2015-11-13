@@ -1,7 +1,7 @@
 
 var assert = require('assert');
 
-var Poly = require('../polynomial.min.js');
+var Poly = require('../polynomial.js');
 
 var tests = [
     {f: "C", o: "add", a: "-1x^3-1x^2-1x-1", b: 0, r: "-x^3-x^2-x-1"},
@@ -144,10 +144,18 @@ var tests = [
     {f: 'R', o: 'monic', a: 'x^2+10x+20', b: null, r: "x^2+10x+20"},
     {f: 'R', o: 'monic', a: '5x^2+10x+20', b: null, r: "x^2+2x+4"},
     {f: 'R', o: 'monic', a: '56', b: null, r: "1"},
-    {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b:'2/3', r: '7.(592)'},
-    {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b:'0', r: '9'},
+    {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b: '2/3', r: '7.(592)'},
+    {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b: '0', r: '9'},
     {f: 'R', o: 'degree', a: 123, b: null, r: '0'},
     {f: 'R', o: 'degree', a: 'x^88+3', b: null, r: '88'},
+    {f: 'R', o: 'add', a: '2', b: '2/1', r: '4'},
+    {f: 'R', o: 'add', a: '2*2/2', b: '-1', r: '1'},
+    {f: 'R', o: 'add', a: 'x', b: '3', r: 'x+3'},
+    {f: 'R', o: 'add', a: '2x', b: '2x', r: '4x'},
+    {f: 'R', o: 'add', a: '2*x', b: '2*x', r: '4x'},
+    {f: 'R', o: 'add', a: '2*x^4', b: '2*x', r: '2x^4+2x'},
+    {f: 'Q', o: 'add', a: 'x^8+1/2x', b: '1', r: 'x^8+0.5x+1'},
+    {f: 'C', o: 'add', a: "2i*3*4x^8+1/2*x", b: '-0.5x', r: '24ix^8'},
 ];
 
 
@@ -176,20 +184,20 @@ describe('Polynomial', function() {
 });
 
 describe('Polynomial Horner', function() {
-/*
-    it("1/2x^4-9x^2-4x+12 in horner", function() {
-
-        Poly.setField("Q");
-        assert.equal(Poly("1/2x^4-9x^2-4x+12").toHorner(), "x(x(0.5x^2-9)-4)+12");
-
-        Poly.setField("C");
-        assert.equal(Poly("2x^4-9x^2-4x+12i+3ix^2").toHorner(), "x(x(2x^2-9+3i)-4)+12i");
-
-        Poly.setField("R");
-        assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "x^2(x^2(3x^3-9)-4)+12");
-
-    });
-*/
+    /*
+     it("1/2x^4-9x^2-4x+12 in horner", function() {
+     
+     Poly.setField("Q");
+     assert.equal(Poly("1/2x^4-9x^2-4x+12").toHorner(), "x(x(0.5x^2-9)-4)+12");
+     
+     Poly.setField("C");
+     assert.equal(Poly("2x^4-9x^2-4x+12i+3ix^2").toHorner(), "x(x(2x^2-9+3i)-4)+12i");
+     
+     Poly.setField("R");
+     assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "x^2(x^2(3x^3-9)-4)+12");
+     
+     });
+     */
     it("1/2x^4-9x^2-4x+12 in latex", function() {
 
         Poly.setField("Q");

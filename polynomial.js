@@ -269,6 +269,23 @@
         return r;
     };
 
+    function parseExp(sgn, exp) {
+
+        exp = String(exp).match(/[^*/]+|[*/]/g);
+
+        var num = FIELD['parse'](sgn + exp[0]);
+
+        for (var i = 1; i < exp.length; i += 2) {
+
+            if (exp[i] === '*') {
+                num = FIELD['mul'](num, FIELD['parse'](exp[i + 1] || 1));
+            } else if (exp[i] === '/') {
+                num = FIELD['div'](num, FIELD['parse'](exp[i + 1] || 1));
+            }
+        }
+        return num;
+    }
+
     /**
      * Parses the actual number
      * 
@@ -322,7 +339,7 @@
                         num = tmp[2];
                     }
 
-                    num = FIELD['parse'](tmp[1] + num);
+                    num = parseExp(tmp[1], num);
 
                     // Parse exponent
                     if (tmp[3] !== undefined) {
@@ -953,5 +970,7 @@
 
         root['Polynomial'] = Polynomial;
     }
-    
+
+    new Polynomial("2*2/2")
+
 })(this);
