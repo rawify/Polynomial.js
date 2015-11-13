@@ -239,10 +239,7 @@
 
         var i = degree(x);
         var j = degree(y);
-
-        if (Polynomial['trace'] !== null) {
-            Polynomial['trace'] = [];
-        }
+        var trace = [];
 
         while (i >= j) {
 
@@ -258,19 +255,16 @@
                 for (var k in y) {
                     tr[+k + i - j] = FIELD['mul'](y[k] || 0, tmp);
                 }
-                Polynomial['trace'].push(new Polynomial(tr));
+                trace.push(new Polynomial(tr));
             }
 
-            if (i === (k = degree(x))) { // No reduction - fail; abuse "k" for a moment
-                return null;
-            }
-
-            i = k;
+            i = degree(x);
         }
 
         // Add rest
         if (Polynomial['trace'] !== null) {
-            Polynomial['trace'].push(new Polynomial(x));
+            trace.push(new Polynomial(x));
+            Polynomial['trace'] = trace;
         }
         return r;
     };
@@ -959,5 +953,5 @@
 
         root['Polynomial'] = Polynomial;
     }
-
+    
 })(this);
