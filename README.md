@@ -58,7 +58,7 @@ Polynomial.setField("C");
 new Polynomial("98x^2+i+23ix^4");
 
 // Example with rational nubers
-Polynomial.setField("R");
+Polynomial.setField("Q");
 new Polynomial("5/3x^3+4/3x");
 ```
 
