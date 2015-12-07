@@ -69,7 +69,7 @@ Polynomial.js is held general in order to operate on various fields. [Fraction.j
 
 * ℚ: Rational numbers supported by [Fraction.js](https://github.com/infusion/Fraction.js) 
 * ℂ: Complex numbers supported by [Complex.js](https://github.com/infusion/Complex.js)
-* ℤ_p: Field of integers mod p, with p prime
+* ℤ<sub>p</sub>: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
 
 Examples
