@@ -838,6 +838,7 @@
             return a - b;
         });
 
+        // TODO: DRY, Combine with toString function
         function valToString(val, hasSign) {
 
             var str = "";
