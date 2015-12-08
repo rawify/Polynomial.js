@@ -180,9 +180,9 @@ String toLatex()
 ---
 Generates a LaTeX representation of the actual polynomial.
 
-<!--String toHorner()
+String toHorner()
 ---
-Formats the actual polynomial to a [Horner Scheme](https://en.wikipedia.org/wiki/Horner's_method)-->
+Formats the actual polynomial to a [Horner Scheme](https://en.wikipedia.org/wiki/Horner's_method)
 
 Polynomial clone()
 ---
