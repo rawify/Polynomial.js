@@ -822,7 +822,107 @@
      * 
      * @returns {string}
      */
-    //Polynomial.prototype['toHorner'] = ;
+    Polynomial.prototype['toHorner'] = function() {
+
+        var poly = this['coeff'];
+        var keys = [];
+        for (var i in poly) {
+            if (!FIELD.empty(poly[i]))
+                keys.push(+i);
+        }
+
+        if (keys.length === 0)
+            return "0";
+
+        keys.sort(function(a, b) {
+            return a - b;
+        });
+
+        function valToString(val, hasSign) {
+
+            var str = "";
+
+            if (Complex && val instanceof Complex) {
+
+                if (val['i'] === 0) {
+
+                    if (val['r'] > 0 && hasSign) {
+                        str += "+";
+                    }
+                    str += val['r'];
+
+                } else if (val['r'] === 0) {
+
+                    if (val[i] === -1) {
+                        str += "-";
+                    } else if (val['i'] !== 1) {
+
+                        if (val['i'] > 0 && hasSign) {
+                            str += "+";
+                        }
+                        str += val['i'];
+                    }
+                    str += "i";
+
+                } else {
+
+                    if (hasSign) {
+                        str += "+";
+                    }
+
+                    str += "(";
+                    str += val.toString();
+                    str += ")";
+                }
+
+                return str;
+
+            } else {
+
+                if (val > 0 && hasSign) {
+                    str += "+";
+                }
+                str += val.toString();
+            }
+            return str;
+        }
+
+        function rec(keys, pos) {
+
+            var ndx = keys.length - pos - 1;
+            var exp = keys[ndx] - (keys[ndx - 1] || 0);
+            var str1 = "";
+            var str2 = "";
+
+            if (exp > 0) {
+                str1 = "x";
+
+                if (exp > 1) {
+                    str1 += "^" + exp;
+                }
+            }
+
+            if (ndx > 0)
+                str1 += valToString(poly[keys[ndx - 1]], true);
+
+            if (pos === 0) {
+                return valToString(poly[keys[ndx]], false) + str1;
+            }
+
+            if (ndx >= 0 && keys[ndx])
+                str2 += "(";
+
+            str2 += rec(keys, pos - 1);
+
+            if (ndx >= 0 && keys[ndx])
+                str2 += ")";
+
+            str2 += str1;
+
+            return str2;
+        }
+        return rec(keys, keys.length - 1);
+    };
 
     /**
      * Clones the actual object
@@ -970,7 +1070,5 @@
 
         root['Polynomial'] = Polynomial;
     }
-
-    new Polynomial("2*2/2")
 
 })(this);

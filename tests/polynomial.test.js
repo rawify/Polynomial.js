@@ -184,23 +184,27 @@ describe('Polynomial', function() {
 });
 
 describe('Polynomial Horner', function() {
-    /*
-     it("1/2x^4-9x^2-4x+12 in horner", function() {
-     
-     Poly.setField("Q");
-     assert.equal(Poly("1/2x^4-9x^2-4x+12").toHorner(), "x(x(0.5x^2-9)-4)+12");
-     
-     Poly.setField("C");
-     assert.equal(Poly("2x^4-9x^2-4x+12i+3ix^2").toHorner(), "x(x(2x^2-9+3i)-4)+12i");
-     
-     Poly.setField("R");
-     assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "x^2(x^2(3x^3-9)-4)+12");
-     
-     });
-     */
+
+    it("1/2x^4-9x^2-4x+12 in horner", function() {
+
+        Poly.setField("Q");
+        assert.equal(Poly("1/2x^4-9x^2-4x+12").toHorner(), "((0.5x^2-9)x-4)x+12");
+
+        Poly.setField("C");
+        assert.equal(Poly("-2x^4-9x^2-4x+12i+3ix^2").toHorner(), "((-2x^2+(-9+3i))x-4)x+12i");
+        assert.equal(Poly("-ix^4+2x^4-9x^2-4x+12i+3ix^2").toHorner(), "(((2-i)x^2+(-9+3i))x-4)x+12i");
+
+        Poly.setField("R");
+        assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "((3x^3-9)x^2-4)x^2+12");
+        assert.equal(Poly("7x^2+x").toHorner(), "(7x+1)x");
+        assert.equal(Poly("7x^13+8x^7+3x^3+4x+2").toHorner(), "(((7x^6+8)x^4+3)x^2+4)x+2");
+
+    });
+
     it("1/2x^4-9x^2-4x+12 in latex", function() {
 
         Poly.setField("Q");
         assert.equal(Poly("1/2x^4-9x^2-4x+12").integrate().toLatex(), "\\frac{1}{10}x^5-3x^3-2x^2+12x");
     });
 });
+
