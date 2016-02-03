@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.0.3 03/07/2015
+ * @license Polinomial.js v1.1.0 03/07/2015
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -725,16 +725,16 @@
                 if (Complex && val instanceof Complex) {
 
                     // Add real part
-                    if (val['r'] !== 0) {
+                    if (val['re'] !== 0) {
 
-                        if (str !== "" && val['r'] > 0) {
+                        if (str !== "" && val['re'] > 0) {
                             str += "+";
                         }
 
-                        if (val['r'] === -1 && i !== 0) {
+                        if (val['re'] === -1 && i !== 0) {
                             str += "-";
-                        } else if (val['r'] !== 1 || i === 0) {
-                            str += val['r'];
+                        } else if (val['re'] !== 1 || i === 0) {
+                            str += val['re'];
                         }
 
                         // Add exponent if necessary, no DRY, let's feed gzip
@@ -745,16 +745,16 @@
                     }
 
                     // Add imaginary part
-                    if (val['i'] !== 0) {
+                    if (val['im'] !== 0) {
 
-                        if (str !== "" && val['i'] > 0) {
+                        if (str !== "" && val['im'] > 0) {
                             str += "+";
                         }
 
-                        if (val['i'] === -1) {
+                        if (val['im'] === -1) {
                             str += "-";
-                        } else if (val['i'] !== 1) {
-                            str += val['i'];
+                        } else if (val['im'] !== 1) {
+                            str += val['im'];
                         }
 
                         str += "i";
@@ -845,23 +845,23 @@
 
             if (Complex && val instanceof Complex) {
 
-                if (val['i'] === 0) {
+                if (val['im'] === 0) {
 
-                    if (val['r'] > 0 && hasSign) {
+                    if (val['re'] > 0 && hasSign) {
                         str += "+";
                     }
-                    str += val['r'];
+                    str += val['re'];
 
-                } else if (val['r'] === 0) {
+                } else if (val['re'] === 0) {
 
                     if (val[i] === -1) {
                         str += "-";
-                    } else if (val['i'] !== 1) {
+                    } else if (val['im'] !== 1) {
 
-                        if (val['i'] > 0 && hasSign) {
+                        if (val['im'] > 0 && hasSign) {
                             str += "+";
                         }
-                        str += val['i'];
+                        str += val['im'];
                     }
                     str += "i";
 
