@@ -191,7 +191,7 @@ describe('Polynomial Horner', function() {
 
         Poly.setField("C");
         assert.equal(Poly("-2x^4-9x^2-4x+12i+3ix^2").toHorner(), "((-2x^2+(-9 + 3i))x-4)x+12i");
-        assert.equal(Poly("-ix^4+2x^4-9x^2-4x+12i+3ix^2").toHorner(), "(((2 - i)x^2+(-9 + 3i))x-4)x + 12i");
+        assert.equal(Poly("-ix^4+2x^4-9x^2-4x+12i+3ix^2").toHorner(), "(((2 - i)x^2+(-9 + 3i))x-4)x+12i");
 
         Poly.setField("R");
         assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "((3x^3-9)x^2-4)x^2+12");
