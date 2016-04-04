@@ -8,6 +8,7 @@
     "keywords": ["math", "poly", "polynomial", "number", "complex", "rational", "parser"],
     "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "polynomial",
+    "private": false,
     "readmeFilename": "README.md",
     "directories": {
         "example": "examples"
