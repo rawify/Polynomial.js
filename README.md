@@ -1,6 +1,6 @@
 # Polynomial.js
 
-[![NPM Package](https://img.shields.io/npm/v/polynomial.js.svg?style=flat)](https://npmjs.org/package/polynomial.js "View this project on npm")
+[![NPM Package](https://img.shields.io/npm/v/polynomial.svg?style=flat)](https://npmjs.org/package/polynomial "View this project on npm")
 [![Build Status](https://travis-ci.org/infusion/Polynomial.js.svg?branch=master)](https://travis-ci.org/infusion/Polynomial.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
@@ -213,7 +213,7 @@ bower install polynomial.js
 or
 
 ```
-npm install --save polynomial.js
+npm install --save polynomial
 ```
 
 Using Polynomial.js with the browser
