@@ -218,25 +218,27 @@ npm install --save polynomial
 
 Using Polynomial.js with the browser
 ===
-    <script src="fraction.js"></script> <!-- Needed for field/ring Q -->
-    <script src="complex.js"></script> <!-- Needed for field C -->
-    <script src="polynomial.js"></script>
-    <script>
-        Polynomial.setField("C")
-        console.log(Polynomial("4x+3i"));
-    </script>
-
+```html
+<script src="fraction.js"></script> <!-- Needed for field/ring Q -->
+<script src="complex.js"></script> <!-- Needed for field C -->
+<script src="polynomial.js"></script>
+<script>
+Polynomial.setField("C")
+console.log(Polynomial("4x+3i"));
+</script>
+```
 
 Using Polynomial.js with require.js
 ===
-    <script src="require.js"></script>
-    <script>
-    requirejs(['polynomial.js'],
-    function(Polynomial) {
-        console.log(Polynomial("4x+3i"));
-    });
-    </script>
-
+```html
+<script src="require.js"></script>
+<script>
+requirejs(['polynomial.js'],
+function(Polynomial) {
+console.log(Polynomial("4x+3i"));
+});
+</script>
+```
 
 Coding Style
 ===
