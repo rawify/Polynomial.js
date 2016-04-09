@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/infusion/Polynomial.js.svg?branch=master)](https://travis-ci.org/infusion/Polynomial.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-Polynomials are defined as the sum of variables with increasing integer power and their coefficients. For example this might be still known from school
+Polynomials are defined as the sum of variables with increasing integer power and their coefficients in a certain field. For example the following might be still known from school:
 
 ```
 P(x) = x^2 + 4x + 3
