@@ -9,6 +9,11 @@
         "complex.js": "*"
     },
     "keywords": ["math", "poly", "polynomial", "number", "complex", "rational", "parser"],
+    "moduleType": [
+      "amd",
+      "globals",
+      "node"
+    ],
     "authors": [
         "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)"
     ],
