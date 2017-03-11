@@ -61,6 +61,13 @@
      * @type Function
      */
     var Complex;
+    
+    /**
+     * The Quaternion callback
+     * 
+     * @type Function
+     */
+    var Quaternion;
 
     var STR_REGEXP = /([+-]?)(?:([^+x-]+)?(?:x(?:\^([\d\/]+))?)|([^+x-]+))/g;
 
@@ -308,7 +315,7 @@
                     x = x['coeff'];
                 }
 
-                if (Fraction && x instanceof Fraction || Complex && x instanceof Complex) {
+                if (Fraction && x instanceof Fraction || Complex && x instanceof Complex || Quaternion && x instanceof Quaternion) {
                     ret[0] = x;
                 } else
                     // Handles Arrays the same way
@@ -947,7 +954,7 @@
     /**
      * Set the field globally
      * 
-     * @param {string|Object} field One of: C (complex), Q (rational), R (real) or an object with methods for field
+     * @param {string|Object} field One of: C (complex), H (quaternion), Q (rational), R (real) or an object with methods for field
      */
     Polynomial['setField'] = function(field) {
 
@@ -1003,6 +1010,32 @@
                 }
             };
 
+        } else if (field === 'H') {
+
+            FIELD = {
+                "add": function(a, b) {
+                    return new Quaternion(a)['add'](b);
+                },
+                "sub": function(a, b) {
+                    return new Quaternion(a)['sub'](b);
+                },
+                "mul": function(a, b) {
+                    return new Quaternion(a)['mul'](b);
+                },
+                "div": function(a, b) {
+                    return new Quaternion(a)['div'](b);
+                },
+                "parse": function(x) {
+                    return new Quaternion(x);
+                },
+                "empty": function(x) {
+                    return new Quaternion(x)['equals'](0);
+                },
+                "pow": function(a, b) {
+                    return new Quaternion(a)['pow'](b);
+                }
+            };
+            
         } else if (!field || field === 'R') {
 
             FIELD = ORIG_FIELD;
@@ -1051,9 +1084,10 @@
 
     if (typeof define === 'function' && define['amd']) {
 
-        define(["fraction.js", "complex.js"], function(frac, comp) {
+        define(["fraction.js", "complex.js", "quaternion"], function(frac, comp, quat) {
             Fraction = frac;
             Complex = comp;
+            Quaternion = quat;
             return Polynomial;
         });
 
@@ -1061,6 +1095,7 @@
 
         Fraction = require("fraction.js");
         Complex = require("complex.js");
+        Quaternion = require("quaternion");
 
         module['exports'] = Polynomial;
 
@@ -1068,6 +1103,7 @@
 
         Fraction = root['Fraction'];
         Complex = root['Complex'];
+        Quaternion = root['Quaternion'];
 
         root['Polynomial'] = Polynomial;
     }
