@@ -30,6 +30,7 @@
     "dependencies": {
         "fraction.js": "*",
         "complex.js": "*",
+        "quaternion": "*",
         "big-integer": "*"
     }
 }
