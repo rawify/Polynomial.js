@@ -69,6 +69,7 @@ Polynomial.js is held general in order to operate on various fields. [Fraction.j
 
 * ℚ: Rational numbers supported by [Fraction.js](https://github.com/infusion/Fraction.js) 
 * ℂ: Complex numbers supported by [Complex.js](https://github.com/infusion/Complex.js)
+* ℍ: Quaternions supported by [Quaternion.js](https://github.com/infusion/Quaternion.js)
 * ℤ<sub>p</sub>: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
 
@@ -194,6 +195,7 @@ Sets the field globally. Choose one of the following strings for `x`:
 
 - "R": real numbers
 - "Q": rational numbers
+- "H": quaternions
 - "C": complex numbers
 - "Zp": with p a prime number, like "Z7"
 - or an object with the field operators. See examples folders for bigint
