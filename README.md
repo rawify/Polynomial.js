@@ -215,7 +215,7 @@ bower install polynomial.js
 or
 
 ```
-npm install --save polynomial
+npm install polynomial
 ```
 
 Using Polynomial.js with the browser
