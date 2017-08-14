@@ -5,7 +5,15 @@
     "homepage": "https://github.com/infusion/Polynomial.js",
     "bugs": "https://github.com/infusion/Polynomial.js/issues",
     "description": "A polynomial library",
-    "keywords": ["math", "poly", "polynomial", "number", "complex", "rational", "parser"],
+    "keywords": [
+        "math",
+        "poly",
+        "polynomial",
+        "number",
+        "complex",
+        "rational",
+        "parser"
+    ],
     "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "polynomial",
     "private": false,
