@@ -1,7 +1,7 @@
 {
     "name": "polynomial.js",
     "main": "polynomial.js",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "homepage": "https://github.com/infusion/Polynomial.js",
     "description": "A polynomial library",
     "dependencies": {

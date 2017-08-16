@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.1.0 03/07/2015
+ * @license Polinomial.js v1.2.0 16/08/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -322,7 +322,7 @@
           for (var i in x) {
 
             if (!FIELD['empty'](x[i])) {
-              ret[i] = x[i];
+              ret[i] = FIELD['parse'](x[i]);
             }
           }
         return ret;
