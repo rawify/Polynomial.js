@@ -1,5 +1,5 @@
 /**
- * @license Polynomial.js v1.2.2 11/12/2017
+ * @license Polynomial.js v1.3.0 11/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -441,13 +441,12 @@
     var n = degree(poly);
     var ret = poly[n];
 
-    for (var i = n-1; i >= 0; i--) {
+    for (var i = n - 1; i >= 0; i--) {
       ret = FIELD['mul'](ret, x);
       if (!FIELD['empty'](poly[i])) {
         ret = FIELD['add'](ret, poly[i]);
-      };
-    };
-
+      }
+    }
     return ret;
   };
 
@@ -993,81 +992,36 @@
    */
   Polynomial['setField'] = function(field) {
 
-    if (field === 'Q') {
+    // Fields with the same common API
+    var F = {
+      "Q": Fraction,
+      "C": Complex,
+      "H": Quaternion
+    }[field];
+
+    if (F !== undefined) {
 
       FIELD = {
         "add": function(a, b) {
-          return new Fraction(a)['add'](b);
+          return new F(a)['add'](b);
         },
         "sub": function(a, b) {
-          return new Fraction(a)['sub'](b);
+          return new F(a)['sub'](b);
         },
         "mul": function(a, b) {
-          return new Fraction(a)['mul'](b);
+          return new F(a)['mul'](b);
         },
         "div": function(a, b) {
-          return new Fraction(a)['div'](b);
+          return new F(a)['div'](b);
         },
         "parse": function(x) {
-          return new Fraction(x);
+          return new F(x);
         },
         "empty": function(x) {
-          return new Fraction(x)['equals'](0);
+          return new F(x)['equals'](0);
         },
         "pow": function(a, b) {
-          return new Fraction(a)['pow'](b);
-        }
-      };
-
-    } else if (field === 'C') {
-
-      FIELD = {
-        "add": function(a, b) {
-          return new Complex(a)['add'](b);
-        },
-        "sub": function(a, b) {
-          return new Complex(a)['sub'](b);
-        },
-        "mul": function(a, b) {
-          return new Complex(a)['mul'](b);
-        },
-        "div": function(a, b) {
-          return new Complex(a)['div'](b);
-        },
-        "parse": function(x) {
-          return new Complex(x);
-        },
-        "empty": function(x) {
-          return new Complex(x)['equals'](0);
-        },
-        "pow": function(a, b) {
-          return new Complex(a)['pow'](b);
-        }
-      };
-
-    } else if (field === 'H') {
-
-      FIELD = {
-        "add": function(a, b) {
-          return new Quaternion(a)['add'](b);
-        },
-        "sub": function(a, b) {
-          return new Quaternion(a)['sub'](b);
-        },
-        "mul": function(a, b) {
-          return new Quaternion(a)['mul'](b);
-        },
-        "div": function(a, b) {
-          return new Quaternion(a)['div'](b);
-        },
-        "parse": function(x) {
-          return new Quaternion(x);
-        },
-        "empty": function(x) {
-          return new Quaternion(x)['equals'](0);
-        },
-        "pow": function(a, b) {
-          return new Quaternion(a)['pow'](b);
+          return new F(a)['pow'](b);
         }
       };
 
@@ -1113,7 +1067,6 @@
           return r;
         }
       };
-
     }
   };
 

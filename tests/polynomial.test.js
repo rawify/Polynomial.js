@@ -186,18 +186,16 @@ describe('Polynomial', function() {
 
 describe('Polynomial reciprocal', function() {
 
-  it("Reciprocal polynomial of a complex polynomial with all coefficients",
-     function() {
-       Poly.setField("C");
-       assert.equal(Poly("2.x^4-5.ix^3+0.3x^2-0.1ix+4").reciprocal().toString(),
-                    Poly("4x^4-0.1ix^3+0.3x^2-5.ix+2").toString());
+  it("Reciprocal polynomial of a complex polynomial with all coefficients", function() {
+    Poly.setField("C");
+    assert.equal(Poly("2.x^4-5.ix^3+0.3x^2-0.1ix+4").reciprocal().toString(),
+            Poly("4x^4-0.1ix^3+0.3x^2-5.ix+2").toString());
   });
 
-  it("Reciprocal polynomial of a real polynomial with vanishing lower terms",
-     function() {
-       Poly.setField("R");
-       assert.equal(Poly("2.x^4-5.x^3+0.3x^2").reciprocal().toString(),
-                    Poly("0.3x^2-5.x+2").toString());
+  it("Reciprocal polynomial of a real polynomial with vanishing lower terms", function() {
+    Poly.setField("R");
+    assert.equal(Poly("2.x^4-5.x^3+0.3x^2").reciprocal().toString(),
+            Poly("0.3x^2-5.x+2").toString());
   });
 
 });
