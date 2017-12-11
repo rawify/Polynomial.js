@@ -133,6 +133,10 @@ Polynomial neg(n)
 ---
 Returns the negated polynomial
 
+Polynomial reciprocal(n)
+---
+Returns the [reciprocal polynomial](https://en.wikipedia.org/wiki/Reciprocal_polynomial)
+
 Polynomial lc()
 ---
 Gets the leading coefficient

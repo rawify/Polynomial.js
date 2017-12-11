@@ -408,6 +408,25 @@
     return new Polynomial(ret);
   };
 
+  /**
+   * Return the 'reciprocal polynomial', where the coefficients
+   * appear in opposite order; i.e. a[i] -> a[n-i].
+   * See e.g. https://en.wikipedia.org/wiki/Reciprocal_polynomial
+   *
+   * @returns {Polynomial}
+   */
+  Polynomial.prototype['reciprocal'] = function() {
+
+    var ret = {};
+    var poly = this['coeff'];
+    var n = degree(poly);
+
+    for (var i in poly) {
+      ret[n - i] = poly[i];
+    }
+    return new Polynomial(ret);
+  };
+
   function lc(poly) {
 
     var max = null;
