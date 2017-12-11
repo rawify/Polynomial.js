@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.2.1 11/12/2017
+ * @license Polynomial.js v1.2.2 11/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -408,6 +408,49 @@
     return new Polynomial(ret);
   };
 
+  /**
+   * Return the 'reciprocal polynomial', where the coefficients
+   * appear in opposite order; i.e. a[i] -> a[n-i].
+   * See e.g. https://en.wikipedia.org/wiki/Reciprocal_polynomial
+   *
+   * @returns {Polynomial}
+   */
+  Polynomial.prototype['reciprocal'] = function() {
+
+    var ret = {};
+    var poly = this['coeff'];
+    var n = degree(poly);
+
+    for (var i in poly) {
+      ret[n - i] = poly[i];
+    }
+    return new Polynomial(ret);
+  };
+
+  /**
+   * Numerically evaluate the polynomial at a specific point x by
+   * using Horner's method.
+   * See e.g. https://en.wikipedia.org/wiki/Horner%27s_method
+   *
+   * @param {number} x The point where to evaluate this polynomial
+   * @returns {number} The value P(x)
+   */
+  Polynomial.prototype['eval'] = function(x) {
+
+    var poly = this['coeff'];
+    var n = degree(poly);
+    var ret = poly[n];
+
+    for (var i = n-1; i >= 0; i--) {
+      ret = FIELD['mul'](ret, x);
+      if (!FIELD['empty'](poly[i])) {
+        ret = FIELD['add'](ret, poly[i]);
+      };
+    };
+
+    return ret;
+  };
+
   function lc(poly) {
 
     var max = null;
@@ -619,7 +662,7 @@
   };
 
   /**
-   * Calculates the nth of the polynomial
+   * Calculates the nth derivative of the polynomial
    * 
    * @param {number} n The nth derivative
    * @returns {Polynomial}
@@ -667,21 +710,9 @@
   };
 
   /**
-   * Calculate the sum of the polynomial for value x
-   * 
-   * @param {number} x The number x
-   * @returns {number} The sum of the polynomial
+   * (Deprecated) alias for 'eval'
    */
-  Polynomial.prototype['result'] = function(x) {
-
-    var poly = this['coeff'];
-
-    var sum = 0;
-    for (var i in poly) {
-      sum = FIELD['add'](sum, FIELD['mul'](poly[i], FIELD['pow'](x, i)));
-    }
-    return sum;
-  };
+  Polynomial.prototype['result'] = Polynomial.prototype['eval'];
 
   function isNull(r) {
 

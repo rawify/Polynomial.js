@@ -1,7 +1,7 @@
 
 var assert = require('assert');
 
-var Poly = require('../polynomial.min.js');
+var Poly = require('../polynomial.js');
 
 var tests = [
   {f: "C", o: "add", a: "-1x^3-1x^2-1x-1", b: 0, r: "-x^3-x^2-x-1"},
@@ -143,8 +143,8 @@ var tests = [
   {f: 'R', o: 'monic', a: 'x^2+10x+20', b: null, r: "x^2+10x+20"},
   {f: 'R', o: 'monic', a: '5x^2+10x+20', b: null, r: "x^2+2x+4"},
   {f: 'R', o: 'monic', a: '56', b: null, r: "1"},
-  {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b: '2/3', r: '7.(592)'},
-  {f: 'Q', o: 'result', a: '4/3x^2-3x+9', b: '0', r: '9'},
+  {f: 'Q', o: 'eval', a: '4/3x^2-3x+9', b: '2/3', r: '7.(592)'},
+  {f: 'Q', o: 'eval', a: '4/3x^2-3x+9', b: '0', r: '9'},
   {f: 'R', o: 'degree', a: 123, b: null, r: '0'},
   {f: 'R', o: 'degree', a: 'x^88+3', b: null, r: '88'},
   {f: 'R', o: 'add', a: '2', b: '2/1', r: '4'},
@@ -182,6 +182,24 @@ describe('Polynomial', function() {
 
     })(i);
   }
+});
+
+describe('Polynomial reciprocal', function() {
+
+  it("Reciprocal polynomial of a complex polynomial with all coefficients",
+     function() {
+       Poly.setField("C");
+       assert.equal(Poly("2.x^4-5.ix^3+0.3x^2-0.1ix+4").reciprocal().toString(),
+                    Poly("4x^4-0.1ix^3+0.3x^2-5.ix+2").toString());
+  });
+
+  it("Reciprocal polynomial of a real polynomial with vanishing lower terms",
+     function() {
+       Poly.setField("R");
+       assert.equal(Poly("2.x^4-5.x^3+0.3x^2").reciprocal().toString(),
+                    Poly("0.3x^2-5.x+2").toString());
+  });
+
 });
 
 describe('Polynomial Horner', function() {
