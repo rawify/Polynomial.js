@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.2.1 11/12/2017
+ * @license Polynomial.js v1.2.1 11/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -619,7 +619,7 @@
   };
 
   /**
-   * Calculates the nth of the polynomial
+   * Calculates the nth derivative of the polynomial
    * 
    * @param {number} n The nth derivative
    * @returns {Polynomial}
