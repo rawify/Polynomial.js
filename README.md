@@ -157,9 +157,13 @@ Polynomial integrate(n)
 ---
 Returns the n-th integration of the polynomial
 
+mixed eval(x)
+---
+Evaluate the polynomial at point x, using [Horner's method](https://en.wikipedia.org/wiki/Horner%27s_method). Type for x must be a valid value for the given field.
+
 mixed result(x)
 ---
-Returns the sum of the polynomial with value x. Type for x must be a valid value for the given field.
+(Deprecated) Alias for `eval`.
 
 Polynomial pow(exp)
 ---
