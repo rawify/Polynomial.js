@@ -1,7 +1,7 @@
 
 var assert = require('assert');
 
-var Poly = require('../polynomial.js');
+var Poly = require('../polynomial.min.js');
 
 var tests = [
   {f: "C", o: "add", a: "-1x^3-1x^2-1x-1", b: 0, r: "-x^3-x^2-x-1"},
@@ -194,6 +194,8 @@ describe('Polynomial Horner', function() {
     Poly.setField("C");
     assert.equal(Poly("-2x^4-9x^2-4x+12i+3ix^2").toHorner(), "((-2x^2+(-9 + 3i))x-4)x+12i");
     assert.equal(Poly("-ix^4+2x^4-9x^2-4x+12i+3ix^2").toHorner(), "(((2 - i)x^2+(-9 + 3i))x-4)x+12i");
+    assert.equal(Poly("x^4+2.ix^3+2x^2+6x").toHorner(), '(((1x+2i)x+2)x+6)x');
+    assert.equal(Poly("x^4+1.ix^3+2x^2+6x").toHorner(), '(((1x+i)x+2)x+6)x');
 
     Poly.setField("R");
     assert.equal(Poly("3x^7-9x^4-4x^2+12").toHorner(), "((3x^3-9)x^2-4)x^2+12");

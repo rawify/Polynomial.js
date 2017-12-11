@@ -1,5 +1,5 @@
 /**
- * @license Polinomial.js v1.2.0 16/08/2017
+ * @license Polinomial.js v1.2.1 11/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -861,7 +861,7 @@
 
         } else if (val['re'] === 0) {
 
-          if (val[i] === -1) {
+          if (val['im'] === -1) {
             str += "-";
           } else if (val['im'] !== 1) {
 
@@ -869,6 +869,10 @@
               str += "+";
             }
             str += val['im'];
+          } else {
+            if (val['im'] > 0 && hasSign) {
+              str += "+";
+            }
           }
           str += "i";
 
