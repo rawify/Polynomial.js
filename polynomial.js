@@ -716,6 +716,29 @@
    */
   Polynomial.prototype['result'] = Polynomial.prototype['eval'];
 
+  /**
+   * Form a (monic) polynomial out of an array of roots
+   *
+   * @param {Array<number>} roots - Array of roots
+   * @returns {Polynomial} The monic polynomial with those roots
+   */
+  Polynomial['fromRoots'] = function (roots) {
+
+    var n = roots.length;
+
+    // There may be a more efficient way to do this (e.g. recursively
+    // form polynomials from two halves of set of roots, similar to
+    // exponentiation by squaring). Feel free to improve this naive
+    // approach.
+
+    var p = new Polynomial(FIELD['parse'](1.));
+
+    for (var i=0; i<n; i++)
+      p = p.mul(new Polynomial([ FIELD['mul'](roots[i], -1.), 1.]));
+
+    return p;
+  }
+
   function isNull(r) {
 
     return degree(r) === Number.NEGATIVE_INFINITY;

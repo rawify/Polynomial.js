@@ -197,6 +197,10 @@ Polynomial clone()
 ---
 Creates a copy of the actual Polynomial object
 
+Polynomial Polynomial::fromRoots(roots)
+---
+Creates a new (monic) Polynomial whose roots lie at the values provided in the array `roots`
+
 Polynomial::setField(x)
 ---
 Sets the field globally. Choose one of the following strings for `x`:
