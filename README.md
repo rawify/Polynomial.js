@@ -36,7 +36,7 @@ Objects
 ---
 ```javascript
 new Polynomial({'3': 4, '5': '9'}); // 9x^5+4x^3
-new Polynomial([1,2,3]); //3x^2+2x^2+x
+new Polynomial([1,2,3]); //3x^2+2x+1
 ```
 
 Doubles
