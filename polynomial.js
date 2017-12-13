@@ -728,27 +728,37 @@
 
     var zero = FIELD['parse'](0.);
 
-    var nonZeroRoots = roots.filter( root => (!(zero.equals(root))) );
-
+    var nonZeroRoots = roots.filter( root => (!(FIELD['equals'](root, zero))) );
     var numZeros = n - nonZeroRoots.length;
 
-    // There may be a more efficient way to do this (e.g. recursively
-    // form polynomials from two halves of set of roots, similar to
-    // exponentiation by squaring). Feel free to improve this naive
-    // approach.
+    // First we construct the depressed polynomial with a recursive
+    // strategy (this minimizes the number of multiplications)
+    var pOne = new Polynomial(FIELD['parse'](1.));
 
-    // First construct the depressed polynomial
-    var dep = new Polynomial(FIELD['parse'](1.));
+    var productHelper;
 
-    for (var i=0; i<nonZeroRoots.length; i++)
-      dep = dep.mul(new Polynomial([ FIELD['mul'](nonZeroRoots[i], -1.), 1.]));
+    productHelper = function(r) {
+      switch (r.length) {
+      case 0:
+        return pOne;
+      case 1:
+        return new Polynomial([ FIELD['mul'](r[0], -1.), 1.]);
+      default: // recurse
+        var nLeft = Math.floor(r.length/2);
+        var left  = r.slice(0, nLeft),
+            right = r.slice(nLeft, r.length);
+        return productHelper(left).mul( productHelper(right) );
+      }
+    };
+
+    var dep = productHelper(nonZeroRoots);
 
     // Now raise the order by including numZeros zeros
-    var dcoeff = dep.coeff;
+    var dcoeff = dep['coeff'];
     var coeff = {};
 
     for (var i in dcoeff) {
-      coeff[numZeros + parseInt(i)] = dcoeff[i];
+      coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
     }
 
     return new Polynomial(coeff);
