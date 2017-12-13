@@ -38,6 +38,9 @@
     },
     "pow": function(a, b) {
       return Math.pow(a, b);
+    },
+    "equals": function(a, b) {
+      return a == b;
     }
   };
 
@@ -1022,6 +1025,9 @@
         },
         "pow": function(a, b) {
           return new F(a)['pow'](b);
+        },
+        "equals": function(a, b) {
+          return new F(a)['equals'](b);
         }
       };
 
@@ -1065,6 +1071,9 @@
             }
           }
           return r;
+        },
+        "equals": function(a, b) {
+          return a == b;
         }
       };
     }
