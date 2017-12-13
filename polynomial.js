@@ -726,17 +726,32 @@
 
     var n = roots.length;
 
+    var zero = FIELD['parse'](0.);
+
+    var nonZeroRoots = roots.filter( root => (!(zero.equals(root))) );
+
+    var numZeros = n - nonZeroRoots.length;
+
     // There may be a more efficient way to do this (e.g. recursively
     // form polynomials from two halves of set of roots, similar to
     // exponentiation by squaring). Feel free to improve this naive
     // approach.
 
-    var p = new Polynomial(FIELD['parse'](1.));
+    // First construct the depressed polynomial
+    var dep = new Polynomial(FIELD['parse'](1.));
 
-    for (var i=0; i<n; i++)
-      p = p.mul(new Polynomial([ FIELD['mul'](roots[i], -1.), 1.]));
+    for (var i=0; i<nonZeroRoots.length; i++)
+      dep = dep.mul(new Polynomial([ FIELD['mul'](nonZeroRoots[i], -1.), 1.]));
 
-    return p;
+    // Now raise the order by including numZeros zeros
+    var dcoeff = dep.coeff;
+    var coeff = {};
+
+    for (var i in dcoeff) {
+      coeff[numZeros + parseInt(i)] = dcoeff[i];
+    }
+
+    return new Polynomial(coeff);
   }
 
   function isNull(r) {
