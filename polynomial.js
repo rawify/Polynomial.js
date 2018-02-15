@@ -40,7 +40,7 @@
       return Math.pow(a, b);
     },
     "equals": function(a, b) {
-      return a == b;
+      return a === b;
     }
   };
 
@@ -722,34 +722,32 @@
    * @param {Array<number>} roots - Array of roots
    * @returns {Polynomial} The monic polynomial with those roots
    */
-  Polynomial['fromRoots'] = function (roots) {
+  Polynomial['fromRoots'] = function(roots) {
 
     var n = roots.length;
 
-    var zero = FIELD['parse'](0.);
+    var zero = FIELD['parse'](0);
 
-    var nonZeroRoots = roots.filter( root => (!(FIELD['equals'](root, zero))) );
+    var nonZeroRoots = roots.filter(root => (!(FIELD['equals'](root, zero))));
     var numZeros = n - nonZeroRoots.length;
 
     // First we construct the depressed polynomial with a recursive
     // strategy (this minimizes the number of multiplications)
-    var pOne = new Polynomial(FIELD['parse'](1.));
+    var pOne = new Polynomial(FIELD['parse'](1));
 
-    var productHelper;
-
-    productHelper = function(r) {
+    function productHelper(r) {
       switch (r.length) {
-      case 0:
-        return pOne;
-      case 1:
-        return new Polynomial([ FIELD['mul'](r[0], -1.), 1.]);
-      default: // recurse
-        var nLeft = Math.floor(r.length/2);
-        var left  = r.slice(0, nLeft),
-            right = r.slice(nLeft, r.length);
-        return productHelper(left).mul( productHelper(right) );
+        case 0:
+          return pOne;
+        case 1:
+          return new Polynomial([FIELD['mul'](r[0], -1), 1]);
+        default: // recurse
+          var nLeft = Math.floor(r.length / 2);
+          var left = r.slice(0, nLeft);
+          var right = r.slice(nLeft, r.length);
+          return productHelper(left).mul(productHelper(right));
       }
-    };
+    }
 
     var dep = productHelper(nonZeroRoots);
 
@@ -762,7 +760,7 @@
     }
 
     return new Polynomial(coeff);
-  }
+  };
 
   function isNull(r) {
 
