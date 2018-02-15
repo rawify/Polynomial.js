@@ -200,6 +200,21 @@ describe('Polynomial reciprocal', function() {
 
 });
 
+describe('Polynomial fromRoots', function() {
+
+  it("(x-1)(x-2i)(x-3) expands to x^3-4x^2-2ix^2+3x+8ix-6i", function() {
+    Poly.setField("C");
+    assert.equal(Poly.fromRoots([1., { 're':0. , 'im':2. }, 3.]).toString(),
+                 "x^3-4x^2-2ix^2+3x+8ix-6i");
+  });
+  it("Depressed polynomial, (x-1)(x-2i)(x-3)x^4 expands to x^7-4x^6-2ix^6+3x^5+8ix^5-6ix^4", function() {
+    Poly.setField("C");
+    assert.equal(Poly.fromRoots([1., { 're':0. , 'im':2. }, 3., 0., 0., 0., 0.]).toString(),
+                 "x^7-4x^6-2ix^6+3x^5+8ix^5-6ix^4");
+  });
+
+});
+
 describe('Polynomial Horner', function() {
 
   it("1/2x^4-9x^2-4x+12 in horner", function() {

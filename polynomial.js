@@ -1,5 +1,5 @@
 /**
- * @license Polynomial.js v1.3.0 11/12/2017
+ * @license Polynomial.js v1.4.0 13/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -38,6 +38,9 @@
     },
     "pow": function(a, b) {
       return Math.pow(a, b);
+    },
+    "equals": function(a, b) {
+      return a == b;
     }
   };
 
@@ -713,6 +716,54 @@
    */
   Polynomial.prototype['result'] = Polynomial.prototype['eval'];
 
+  /**
+   * Form a (monic) polynomial out of an array of roots
+   *
+   * @param {Array<number>} roots - Array of roots
+   * @returns {Polynomial} The monic polynomial with those roots
+   */
+  Polynomial['fromRoots'] = function (roots) {
+
+    var n = roots.length;
+
+    var zero = FIELD['parse'](0.);
+
+    var nonZeroRoots = roots.filter( root => (!(FIELD['equals'](root, zero))) );
+    var numZeros = n - nonZeroRoots.length;
+
+    // First we construct the depressed polynomial with a recursive
+    // strategy (this minimizes the number of multiplications)
+    var pOne = new Polynomial(FIELD['parse'](1.));
+
+    var productHelper;
+
+    productHelper = function(r) {
+      switch (r.length) {
+      case 0:
+        return pOne;
+      case 1:
+        return new Polynomial([ FIELD['mul'](r[0], -1.), 1.]);
+      default: // recurse
+        var nLeft = Math.floor(r.length/2);
+        var left  = r.slice(0, nLeft),
+            right = r.slice(nLeft, r.length);
+        return productHelper(left).mul( productHelper(right) );
+      }
+    };
+
+    var dep = productHelper(nonZeroRoots);
+
+    // Now raise the order by including numZeros zeros
+    var dcoeff = dep['coeff'];
+    var coeff = {};
+
+    for (var i in dcoeff) {
+      coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
+    }
+
+    return new Polynomial(coeff);
+  }
+
   function isNull(r) {
 
     return degree(r) === Number.NEGATIVE_INFINITY;
@@ -1022,6 +1073,9 @@
         },
         "pow": function(a, b) {
           return new F(a)['pow'](b);
+        },
+        "equals": function(a, b) {
+          return new F(a)['equals'](b);
         }
       };
 
@@ -1065,6 +1119,9 @@
             }
           }
           return r;
+        },
+        "equals": function(a, b) {
+          return a == b;
         }
       };
     }

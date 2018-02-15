@@ -36,7 +36,7 @@ Objects
 ---
 ```javascript
 new Polynomial({'3': 4, '5': '9'}); // 9x^5+4x^3
-new Polynomial([1,2,3]); //3x^2+2x^2+x
+new Polynomial([1,2,3]); //3x^2+2x+1
 ```
 
 Doubles
@@ -196,6 +196,10 @@ Formats the actual polynomial to a [Horner Scheme](https://en.wikipedia.org/wiki
 Polynomial clone()
 ---
 Creates a copy of the actual Polynomial object
+
+Polynomial Polynomial::fromRoots(roots)
+---
+Creates a new (monic) Polynomial whose roots lie at the values provided in the array `roots`
 
 Polynomial::setField(x)
 ---
