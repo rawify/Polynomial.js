@@ -1,5 +1,5 @@
 /**
- * @license Polynomial.js v1.4.1 13/12/2017
+ * @license Polynomial.js v1.4.2 13/12/2017
  *
  * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1141,9 +1141,9 @@
     Quaternion = require("quaternion");
 
     Object.defineProperty(exports, "__esModule", {'value': true});
+    Polynomial['default'] = Polynomial;
+    Polynomial['Polynomial'] = Polynomial;
     module['exports'] = Polynomial;
-    exports['Angles'] = Polynomial;
-    exports['default'] = Polynomial;
 
   } else {
 
