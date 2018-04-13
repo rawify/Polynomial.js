@@ -1,7 +1,7 @@
 /**
- * @license Polynomial.js v1.4.2 13/12/2017
+ * @license Polynomial.js v1.4.3 13/12/2017
  *
- * Copyright (c) 2015, Robert Eisele (robert@xarg.org)
+ * Copyright (c) 2017, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  **/
 
@@ -14,7 +14,7 @@
    * 
    * @type Object
    */
-  let FIELD = {// Run in R
+  var FIELD = {// Run in R
     "add": function(a, b) {
       return a + b;
     },
@@ -49,30 +49,30 @@
    * 
    * @type Object
    */
-  const ORIG_FIELD = FIELD;
+  var ORIG_FIELD = FIELD;
 
   /**
    * The Fraction callback
    * 
    * @type Function
    */
-  let Fraction;
+  var Fraction;
 
   /**
    * The Complex callback
    * 
    * @type Function
    */
-  let Complex;
+  var Complex;
 
   /**
    * The Quaternion callback
    * 
    * @type Function
    */
-  let Quaternion;
+  var Quaternion;
 
-  const STR_REGEXP = /([+-]?)(?:([^+x-]+)?(?:x(?:\^([\d\/]+))?)|([^+x-]+))/g;
+  var STR_REGEXP = /([+-]?)(?:([^+x-]+)?(?:x(?:\^([\d\/]+))?)|([^+x-]+))/g;
 
   /**
    * The constructor function
@@ -98,14 +98,14 @@
    * @param {number} n
    * @returns {number}
    */
-  const modinv = function(z, n) {
+  var modinv = function(z, n) {
 
     /**
      *    z * s + n * t = 1 
      * => z * s mod n = 1
      * => z^-1 = s mod n
      */
-    const tmp = egcd(z, n);
+    var tmp = egcd(z, n);
     if (tmp[0] !== 1) {
       throw "DIV/-";
     }
@@ -120,7 +120,7 @@
    * @returns {number}
    */
   function gcd(a, b) {
-    let t;
+    var t;
     while (b) {
       t = a;
       a = b;
@@ -131,8 +131,8 @@
 
   function clone(x) {
 
-    const res = {};
-    for (let i in x) {
+    var res = {};
+    for (var i in x) {
       res[i] = x[i];
     }
     return res;
@@ -145,15 +145,15 @@
    * @param {number} b
    * @returns {Array}
    */
-  const egcd = function(a, b) {
+  var egcd = function(a, b) {
 
     // gcd = a * s  +  b * t
 
-    let s = 0, t = 1, u = 1, v = 0;
+    var s = 0, t = 1, u = 1, v = 0;
     while (a !== 0) {
 
-      const q = b / a | 0, r = b % a;
-      const m = s - u * q, n = t - v * q;
+      var q = b / a | 0, r = b % a;
+      var m = s - u * q, n = t - v * q;
 
       b = a;
       a = r;
@@ -172,7 +172,7 @@
    * @param {number} m 
    * @returns {number}
    */
-  const mod = function(n, m) {
+  var mod = function(n, m) {
 
     return (n % m + m) % m;
   };
@@ -184,9 +184,9 @@
    * @param {number} k
    * @returns {number}
    */
-  const factorial = function(n, k) {
+  var factorial = function(n, k) {
 
-    let p = 1;
+    var p = 1;
     for (k = n - k; k < n; n--) {
       p *= n;
     }
@@ -209,11 +209,11 @@
    */
   function keyUnion(a, b) {
 
-    const k = {};
-    for (let i in a) {
+    var k = {};
+    for (var i in a) {
       k[i] = 1;
     }
-    for (let i in b) {
+    for (var i in b) {
       k[i] = 1;
     }
     return k;
@@ -227,9 +227,9 @@
    */
   function degree(x) {
 
-    let i = Number.NEGATIVE_INFINITY;
+    var i = Number.NEGATIVE_INFINITY;
 
-    for (let k in x) {
+    for (var k in x) {
       if (!FIELD['empty'](x[k]))
         i = Math.max(k, i);
     }
@@ -243,26 +243,26 @@
    * @param {Object} y The denominator coefficients
    * @returns {Object}
    */
-  const div = function(x, y) {
+  var div = function(x, y) {
 
-    const r = {};
+    var r = {};
 
-    let i = degree(x);
-    let j = degree(y);
-    const trace = [];
+    var i = degree(x);
+    var j = degree(y);
+    var trace = [];
 
     while (i >= j) {
 
-      const tmp = r[i - j] = FIELD['div'](x[i] || 0, y[j] || 0);
+      var tmp = r[i - j] = FIELD['div'](x[i] || 0, y[j] || 0);
 
-      for (let k in y) {
+      for (var k in y) {
         x[+k + i - j] = FIELD['sub'](x[+k + i - j] || 0, FIELD['mul'](y[k] || 0, tmp));
       }
 
       if (Polynomial['trace'] !== null) {
 
-        const tr = {};
-        for (let k in y) {
+        var tr = {};
+        for (var k in y) {
           tr[+k + i - j] = FIELD['mul'](y[k] || 0, tmp);
         }
         trace.push(new Polynomial(tr));
@@ -283,9 +283,9 @@
 
     exp = String(exp).match(/[^*/]+|[*/]/g);
 
-    let num = FIELD['parse'](sgn + exp[0]);
+    var num = FIELD['parse'](sgn + exp[0]);
 
-    for (let i = 1; i < exp.length; i += 2) {
+    for (var i = 1; i < exp.length; i += 2) {
 
       if (exp[i] === '*') {
         num = FIELD['mul'](num, FIELD['parse'](exp[i + 1] || 1));
@@ -302,9 +302,9 @@
    * @param {String|Object|null|number} x The polynomial to be parsed
    * @returns {Object}
    */
-  const parse = function(x) {
+  var parse = function(x) {
 
-    const ret = {};
+    var ret = {};
 
     if (x === null || x === undefined) {
       x = 0;
@@ -322,7 +322,7 @@
           ret[0] = x;
         } else
           // Handles Arrays the same way
-          for (let i in x) {
+          for (var i in x) {
 
             if (!FIELD['empty'](x[i])) {
               ret[i] = FIELD['parse'](x[i]);
@@ -335,12 +335,12 @@
 
       case "string":
 
-        let tmp;
+        var tmp;
 
         while (null !== (tmp = STR_REGEXP['exec'](x))) {
 
-          let num = 1;
-          let exp = 1;
+          var num = 1;
+          var exp = 1;
 
           if (tmp[4] !== undefined) {
             num = tmp[4];
@@ -375,14 +375,14 @@
    */
   Polynomial.prototype['gcd'] = function(x) {
 
-    let a = clone(this['coeff']);
-    let b = parse(x);
+    var a = clone(this['coeff']);
+    var b = parse(x);
 
-    let max;
+    var max;
 
     while (!isNull(b)) {
 
-      const r = clone(a);
+      var r = clone(a);
 
       div(r, b);
 
@@ -402,10 +402,10 @@
    */
   Polynomial.prototype['neg'] = function() {
 
-    const ret = {};
-    const poly = this['coeff'];
+    var ret = {};
+    var poly = this['coeff'];
 
-    for (let i in poly) {
+    for (var i in poly) {
       ret[i] = FIELD['mul'](poly[i], -1);
     }
     return new Polynomial(ret);
@@ -420,11 +420,11 @@
    */
   Polynomial.prototype['reciprocal'] = function() {
 
-    const ret = {};
-    const poly = this['coeff'];
-    const n = degree(poly);
+    var ret = {};
+    var poly = this['coeff'];
+    var n = degree(poly);
 
-    for (let i in poly) {
+    for (var i in poly) {
       ret[n - i] = poly[i];
     }
     return new Polynomial(ret);
@@ -440,11 +440,11 @@
    */
   Polynomial.prototype['eval'] = function(x) {
 
-    const poly = this['coeff'];
-    const n = degree(poly);
-    let ret = poly[n];
+    var poly = this['coeff'];
+    var n = degree(poly);
+    var ret = poly[n];
 
-    for (let i = n - 1; i >= 0; i--) {
+    for (var i = n - 1; i >= 0; i--) {
       ret = FIELD['mul'](ret, x);
       if (!FIELD['empty'](poly[i])) {
         ret = FIELD['add'](ret, poly[i]);
@@ -455,9 +455,9 @@
 
   function lc(poly) {
 
-    let max = null;
+    var max = null;
 
-    for (let i in poly) {
+    for (var i in poly) {
 
       if (!FIELD['empty'](poly[i])) {
 
@@ -473,7 +473,7 @@
 
     if (max !== null) {
 
-      for (let i in a) {
+      for (var i in a) {
         a[i] = FIELD['div'](a[i], a[max]);
       }
     }
@@ -487,7 +487,7 @@
    */
   Polynomial.prototype['lc'] = function() {
 
-    const max = lc(this['coeff']);
+    var max = lc(this['coeff']);
 
     return this['coeff'][max];
   };
@@ -499,9 +499,9 @@
    */
   Polynomial.prototype['lm'] = function() {
 
-    const max = lc(this['coeff']);
+    var max = lc(this['coeff']);
 
-    const res = {};
+    var res = {};
 
     res[max] = this['coeff'][max];
     return new Polynomial(res);
@@ -525,14 +525,14 @@
    */
   Polynomial.prototype['add'] = function(x) {
 
-    const para = parse(x);
+    var para = parse(x);
 
-    const ret = {};
-    const poly = this['coeff'];
+    var ret = {};
+    var poly = this['coeff'];
 
-    const keys = keyUnion(para, poly);
+    var keys = keyUnion(para, poly);
 
-    for (let i in keys) {
+    for (var i in keys) {
       ret[i] = FIELD['add'](poly[i] || 0, para[i] || 0);
     }
     return new Polynomial(ret);
@@ -546,14 +546,14 @@
    */
   Polynomial.prototype['sub'] = function(x) {
 
-    const para = parse(x);
+    var para = parse(x);
 
-    const ret = {};
-    const poly = this['coeff'];
+    var ret = {};
+    var poly = this['coeff'];
 
-    const keys = keyUnion(para, poly);
+    var keys = keyUnion(para, poly);
 
-    for (let i in keys) {
+    for (var i in keys) {
       ret[i] = FIELD['sub'](poly[i] || 0, para[i] || 0);
     }
     return new Polynomial(ret);
@@ -567,16 +567,16 @@
    */
   Polynomial.prototype['mul'] = function(x) {
 
-    const para = parse(x);
+    var para = parse(x);
 
-    const ret = {};
-    const poly = this['coeff'];
+    var ret = {};
+    var poly = this['coeff'];
 
-    for (let i in para) {
+    for (var i in para) {
 
       i = +i;
 
-      for (let j in poly) {
+      for (var j in poly) {
 
         j = +j;
 
@@ -595,15 +595,15 @@
    */
   Polynomial.prototype['addmul'] = function(x, y) {
 
-    const _x = parse(x);
-    const _y = parse(y);
+    var _x = parse(x);
+    var _y = parse(y);
 
-    const res = {};
-    for (let i in _x) {
+    var res = {};
+    for (var i in _x) {
 
       i = +i;
 
-      for (let j in _y) {
+      for (var j in _y) {
         j = +j;
 
         res[i + j] = FIELD['add'](res[i + j] || 0, FIELD['mul'](_x[i] || 0, _y[j] || 0));
@@ -634,8 +634,8 @@
       throw "Invalid";
     }
 
-    let res = new Polynomial(1);
-    let tmp = this;
+    var res = new Polynomial(1);
+    var tmp = this;
 
     while (e > 0) {
 
@@ -656,7 +656,7 @@
    */
   Polynomial.prototype['mod'] = function(x) {
 
-    const mod = clone(this['coeff']);
+    var mod = clone(this['coeff']);
 
     div(mod, parse(x));
 
@@ -677,10 +677,10 @@
       return null;
     }
 
-    const poly = this['coeff'];
-    const ret = {};
+    var poly = this['coeff'];
+    var ret = {};
 
-    for (let i in poly) {
+    for (var i in poly) {
 
       if (+i >= n)
         ret[i - n] = FIELD['mul'](poly[i] || 0, factorial(+i, n));
@@ -702,10 +702,10 @@
       return null;
     }
 
-    const poly = this['coeff'];
-    const ret = {};
+    var poly = this['coeff'];
+    var ret = {};
 
-    for (let i in poly) {
+    for (var i in poly) {
       ret[+i + n] = FIELD['div'](poly[i] || 0, factorial(+i + n, n));
     }
     return new Polynomial(ret);
@@ -724,16 +724,16 @@
    */
   Polynomial['fromRoots'] = function(roots) {
 
-    const n = roots.length;
+    var n = roots.length;
 
-    const zero = FIELD['parse'](0);
+    var zero = FIELD['parse'](0);
 
-    const nonZeroRoots = roots.filter(root => (!(FIELD['equals'](root, zero))));
-    const numZeros = n - nonZeroRoots.length;
+    var nonZeroRoots = roots.filter(root => (!(FIELD['equals'](root, zero))));
+    var numZeros = n - nonZeroRoots.length;
 
     // First we construct the depressed polynomial with a recursive
     // strategy (this minimizes the number of multiplications)
-    const pOne = new Polynomial(FIELD['parse'](1));
+    var pOne = new Polynomial(FIELD['parse'](1));
 
     function productHelper(r) {
       switch (r.length) {
@@ -742,20 +742,20 @@
         case 1:
           return new Polynomial([FIELD['mul'](r[0], -1), 1]);
         default: // recurse
-          const nLeft = Math.floor(r.length / 2);
-          const left = r.slice(0, nLeft);
-          const right = r.slice(nLeft, r.length);
+          var nLeft = Math.floor(r.length / 2);
+          var left = r.slice(0, nLeft);
+          var right = r.slice(nLeft, r.length);
           return productHelper(left).mul(productHelper(right));
       }
     }
 
-    const dep = productHelper(nonZeroRoots);
+    var dep = productHelper(nonZeroRoots);
 
     // Now raise the order by including numZeros zeros
-    const dcoeff = dep['coeff'];
-    const coeff = {};
+    var dcoeff = dep['coeff'];
+    var coeff = {};
 
-    for (let i in dcoeff) {
+    for (var i in dcoeff) {
       coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
     }
 
@@ -773,19 +773,19 @@
    * @param {string} fn the callback name
    * @returns {Function}
    */
-  const toString = function(fn) {
+  var toString = function(fn) {
 
     /**
      * The actual to string function 
      * 
      * @returns {string|null}
      */
-    const Str = function() {
+    var Str = function() {
 
-      const poly = this['coeff'];
+      var poly = this['coeff'];
 
-      const keys = [];
-      for (let i in poly) {
+      var keys = [];
+      for (var i in poly) {
         keys.push(+i);
       }
 
@@ -796,14 +796,14 @@
         return a - b;
       });
 
-      let str = "";
-      for (let k = keys.length; k--; ) {
+      var str = "";
+      for (var k = keys.length; k--; ) {
 
-        const i = keys[k];
+        var i = keys[k];
 
-        const cur = poly[i];
+        var cur = poly[i];
 
-        let val = cur;
+        var val = cur;
 
         if (val === null || val === undefined)
           continue;
@@ -910,9 +910,9 @@
    */
   Polynomial.prototype['toHorner'] = function() {
 
-    const poly = this['coeff'];
-    const keys = [];
-    for (let i in poly) {
+    var poly = this['coeff'];
+    var keys = [];
+    for (var i in poly) {
       if (!FIELD.empty(poly[i]))
         keys.push(+i);
     }
@@ -927,7 +927,7 @@
     // TODO: DRY, Combine with toString function
     function valToString(val, hasSign) {
 
-      let str = "";
+      var str = "";
 
       if (Complex && val instanceof Complex) {
 
@@ -980,10 +980,10 @@
 
     function rec(keys, pos) {
 
-      const ndx = keys.length - pos - 1;
-      const exp = keys[ndx] - (keys[ndx - 1] || 0);
-      let str1 = "";
-      let str2 = "";
+      var ndx = keys.length - pos - 1;
+      var exp = keys[ndx] - (keys[ndx - 1] || 0);
+      var str1 = "";
+      var str2 = "";
 
       if (exp > 0) {
         str1 = "x";
@@ -1042,7 +1042,7 @@
   Polynomial['setField'] = function(field) {
 
     // Fields with the same common API
-    const F = {
+    var F = {
       "Q": Fraction,
       "C": Complex,
       "H": Quaternion
@@ -1087,7 +1087,7 @@
 
     } else if (field.charAt(0) === 'Z') {
 
-      const N = +field.slice(1);
+      var N = +field.slice(1);
 
       FIELD = {// Test in Z_n
         "add": function(a, b) {
@@ -1110,7 +1110,7 @@
         },
         "pow": function(a, b) {
 
-          for (let r = 1; b > 0; a = mod(a * a, N), b >>= 1) {
+          for (var r = 1; b > 0; a = mod(a * a, N), b >>= 1) {
 
             if (b & 1) {
               r = mod(r * a, N);
