@@ -57,7 +57,7 @@ The string parser passes every coefficient directly to the field parser, which a
 Polynomial.setField("C");
 new Polynomial("98x^2+i+23ix^4");
 
-// Example with rational nubers
+// Example with rational numbers
 Polynomial.setField("Q");
 new Polynomial("5/3x^3+4/3x");
 ```
