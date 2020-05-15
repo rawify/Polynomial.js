@@ -126,7 +126,7 @@ There is a global variable to enable division tracing like this, if you want to 
 Polynomial.trace = true;
 new Polynomial("x^4+3x^3+2x^2+6x")
         .div("x+3");
-console.log(Polynomial.trace)
+console.log(Polynomial.trace.map(x => x.toString())); // ["x^4+3x^3", "2x^2+6x", "0"]
 ```
 
 Polynomial neg(n)
