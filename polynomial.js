@@ -1,5 +1,5 @@
 /**
- * @license Polynomial.js v1.4.4 13/12/2017
+ * @license Polynomial.js v1.4.5 13/12/2017
  *
  * Copyright (c) 2017, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -443,8 +443,8 @@
     var poly = this['coeff'];
     var n = degree(poly);
 
-    if (n < 0 && poly[0] !== undefined) {
-      n = 0;
+    if (n < 0) {
+      return 0;
     }
 
     var ret = poly[n];
