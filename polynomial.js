@@ -1,5 +1,5 @@
 /**
- * @license Polynomial.js v1.4.3 13/12/2017
+ * @license Polynomial.js v1.4.4 13/12/2017
  *
  * Copyright (c) 2017, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -227,7 +227,7 @@
    */
   function degree(x) {
 
-    var i = Number.NEGATIVE_INFINITY;
+    var i = -Infinity;
 
     for (var k in x) {
       if (!FIELD['empty'](x[k]))
@@ -442,6 +442,11 @@
 
     var poly = this['coeff'];
     var n = degree(poly);
+
+    if (n < 0 && poly[0] !== undefined) {
+      n = 0;
+    }
+
     var ret = poly[n];
 
     for (var i = n - 1; i >= 0; i--) {
@@ -764,7 +769,7 @@
 
   function isNull(r) {
 
-    return degree(r) === Number.NEGATIVE_INFINITY;
+    return degree(r) < 0;
   }
 
   /**

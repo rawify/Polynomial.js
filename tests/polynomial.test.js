@@ -145,6 +145,7 @@ var tests = [
   {f: 'R', o: 'monic', a: '56', b: null, r: "1"},
   {f: 'Q', o: 'eval', a: '4/3x^2-3x+9', b: '2/3', r: '7.(592)'},
   {f: 'Q', o: 'eval', a: '4/3x^2-3x+9', b: '0', r: '9'},
+  {f: 'R', o: 'eval', a: '0', b: 1, r: 0},
   {f: 'R', o: 'degree', a: 123, b: null, r: '0'},
   {f: 'R', o: 'degree', a: 'x^88+3', b: null, r: '88'},
   {f: 'R', o: 'add', a: '2', b: '2/1', r: '4'},
