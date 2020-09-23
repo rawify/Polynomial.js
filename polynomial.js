@@ -1145,7 +1145,7 @@
     Complex = require("complex.js");
     Quaternion = require("quaternion");
 
-    Object.defineProperty(exports, "__esModule", {'value': true});
+    Object.defineProperty(Polynomial, "__esModule", {'value': true});
     Polynomial['default'] = Polynomial;
     Polynomial['Polynomial'] = Polynomial;
     module['exports'] = Polynomial;
