@@ -1,31 +1,34 @@
 
-var Polynomial = require('../polynomial.js');
-var bigInt = require("big-integer");
+const Polynomial = require('polynomial');
 
 Polynomial.setField({
-    "add": function(a, b) {
-        return bigInt(a).add(b);
+    "add": function (a, b) {
+        return BigInt(a) + BigInt(b);
     },
-    "sub": function(a, b) {
-        return bigInt(a).subtract(b);
+    "sub": function (a, b) {
+        return BigInt(a) - BigInt(b);
     },
-    "mul": function(a, b) {
-        return bigInt(a).multiply(b);
+    "mul": function (a, b) {
+        return BigInt(a) * BigInt(b);
     },
-    "div": function(a, b) {
-        return bigInt(a).divide(b);
+    "div": function (a, b) {
+        return BigInt(a) / BigInt(b);
     },
-    "parse": function(x) {
-        return bigInt(x);
+    "parse": function (x) {
+        return BigInt(x);
     },
-    "empty": function(x) {
-        return bigInt(x).equals(0);
+    "empty": function (x) {
+        return BigInt(x) === BigInt(0);
     },
-    "pow": function(a, b) {
-        return bigInt(a).pow(b);
+    "pow": function (a, b) {
+        return BigInt(a) ** BigInt(b);
     },
-    "abs": function(a) {
-        return bigInt(a).abs();
+    "abs": function (a) {
+        a = BigInt(a);
+        if (a < 0n) {
+            return -a;
+        }
+        return a;
     }
 });
 

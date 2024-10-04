@@ -1,7 +1,6 @@
 # Polynomial.js
 
 [![NPM Package](https://img.shields.io/npm/v/polynomial.svg?style=flat)](https://npmjs.org/package/polynomial "View this project on npm")
-[![Build Status](https://travis-ci.org/infusion/Polynomial.js.svg?branch=master)](https://travis-ci.org/infusion/Polynomial.js)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 Polynomials are defined as the sum of variables with increasing integer power and their coefficients in a certain field. For example the following might be still known from school:
@@ -10,8 +9,8 @@ Polynomials are defined as the sum of variables with increasing integer power an
 P(x) = x^2 + 4x + 3
 ```
 
-Examples
-===
+## Examples
+
 
 Adding two polynomials
 ---
@@ -25,8 +24,8 @@ Second derivative of polynomial
 var p = new Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
 ```
 
-Parser
-===
+## Parser
+
 
 Any function (see below) as well as the constructor of the *Polynomial* class parses its input like this.
 
@@ -62,8 +61,8 @@ Polynomial.setField("Q");
 new Polynomial("5/3x^3+4/3x");
 ```
 
-Fields
-===
+## Fields
+
 
 Polynomial.js is held general in order to operate on various fields. [Fraction.js](https://github.com/infusion/Fraction.js) and [Complex.js](https://github.com/infusion/Complex.js) build the perfect base to extend polynomials to rational and complex numbers.
 
@@ -73,8 +72,8 @@ Polynomial.js is held general in order to operate on various fields. [Fraction.j
 * ℤ<sub>p</sub>: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
 
-Examples
----
+### Examples
+
 ```javascript
 Polynomial.setField("Q");
 Polynomial("3/2x^2-4x").mod("5x"); // 0
@@ -97,8 +96,8 @@ Polynomial.setField("Q");
 Polynomial("3x^2").integrate(); // x^3
 ```
 
-Functions
-===
+## Functions
+
 
 Polynomial add(n)
 ---
@@ -209,66 +208,58 @@ Sets the field globally. Choose one of the following strings for `x`:
 - "Q": rational numbers
 - "H": quaternions
 - "C": complex numbers
-- "Zp": with p a prime number, like "Z7"
-- or an object with the field operators. See examples folders for bigint
+- "Zp": with p being a prime number, like "Z7"
+- or an object with the field operators. See examples folders for BigInt
 
-Exceptions
-===
+## Exceptions
+
 If a really hard error occurs (parsing error, division by zero), *polynomial.js* throws exceptions! Please make sure you handle them correctly.
 
 
-Installation
-===
-Installing polynomial.js is as easy as cloning this repo or use one of the following commands:
+## Installation
 
-```
-bower install polynomial.js
-```
-or
+Installing Polynomial.js is as easy as cloning this repo or use one of the following command:
+
 
 ```
 npm install polynomial
 ```
 
-Using Polynomial.js with the browser
-===
+## Using Polynomial.js with the browser
+
 ```html
-<script src="fraction.js"></script> <!-- Needed for field/ring Q -->
-<script src="complex.js"></script> <!-- Needed for field C -->
-<script src="polynomial.js"></script>
+<script src="fraction.min.js"></script> <!-- Needed for field/ring Q -->
+<script src="complex.min.js"></script> <!-- Needed for field C -->
+<script src="polynomial.min.js"></script>
 <script>
 Polynomial.setField("C")
 console.log(Polynomial("4x+3i"));
 </script>
 ```
 
-Using Polynomial.js with require.js
-===
-```html
-<script src="require.js"></script>
-<script>
-requirejs(['polynomial.js'],
-function(Polynomial) {
-console.log(Polynomial("4x+3i"));
-});
-</script>
-```
 
-Coding Style
-===
-As every library I publish, polynomial.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
+## Coding Style
 
+As every library I publish, Polynomial.js is also built to be as small as possible after compressing it with Google Closure Compiler in advanced mode. Thus the coding style orientates a little on maxing-out the compression rate. Please make sure you keep this style if you plan to extend the library.
 
-Testing
-===
-If you plan to enhance the library, make sure you add test cases and all the previous tests are passing. You can test the library with
+## Building the library
+
+After cloning the Git repository run:
 
 ```
-npm test
+npm install
+npm run build
 ```
 
+## Run a test
 
-Copyright and licensing
-===
-Copyright (c) 2015, [Robert Eisele](http://www.xarg.org/)
-Dual licensed under the MIT or GPL Version 2 licenses.
+Testing the source against the shipped test suite is as easy as
+
+```
+npm run test
+```
+
+## Copyright and licensing
+
+Copyright (c) 2025, [Robert Eisele](https://raw.org/)
+Licensed under the MIT license.

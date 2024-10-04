@@ -1,5 +1,5 @@
 
-var Polynomial = require('../polynomial.js');
+var Polynomial = require('polynomial');
 
 Polynomial.setField("Q");
 

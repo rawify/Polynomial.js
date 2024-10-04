@@ -1,44 +1,65 @@
 {
     "name": "polynomial",
-    "title": "polynomial.js",
-    "version": "1.4.5",
-    "homepage": "https://github.com/infusion/Polynomial.js",
-    "bugs": "https://github.com/infusion/Polynomial.js/issues",
+    "title": "Polynomial.js",
+    "version": "1.5.0",
+    "homepage": "https://github.com/rawify/Polynomial.js",
+    "bugs": "https://github.com/rawify/Polynomial.js/issues",
     "description": "A polynomial library",
     "keywords": [
         "math",
         "poly",
         "polynomial",
         "number",
+        "bigint",
         "complex",
         "rational",
         "parser"
     ],
-    "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
-    "main": "polynomial",
     "private": false,
+    "main": "./dist/polynomial.js",
+    "module": "./dist/polynomial.mjs",
+    "types": "./polynomial.d.ts",
+    "browser": "./dist/polynomial.min.js",
+    "unpkg": "./dist/polynomial.min.js",
     "readmeFilename": "README.md",
-    "directories": {
-        "example": "examples"
+    "exports": {
+        ".": {
+            "types": "./polynomial.d.ts",
+            "require": "./dist/polynomial.js",
+            "import": "./dist/polynomial.mjs"
+        }
     },
-    "license": "MIT OR GPL-2.0",
     "repository": {
         "type": "git",
-        "url": "git://github.com/infusion/Polynomial.js.git"
+        "url": "git@github.com:rawify/Polynomial.js.git"
     },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/rawify"
+    },
+    "author": {
+        "name": "Robert Eisele",
+        "email": "robert@raw.org",
+        "url": "https://raw.org/"
+    },
+    "license": "MIT",
     "engines": {
         "node": "*"
     },
+    "directories": {
+        "example": "examples"
+    },
     "scripts": {
+        "build": "crude-build Polynomial",
         "test": "mocha tests/*.js"
     },
-    "devDependencies": {
-        "mocha": "*"
-    },
     "dependencies": {
-        "fraction.js": "*",
         "complex.js": "*",
-        "quaternion": "*",
-        "big-integer": "*"
+        "fraction.js": "*",
+        "quaternion": "*"
+    },
+    "devDependencies": {
+        "crude-build": "^0.0.1",
+        "mocha": "*"
     }
 }

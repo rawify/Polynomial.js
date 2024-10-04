@@ -1,7 +1,6 @@
 
+var Poly = require('polynomial');
 var assert = require('assert');
-
-var Poly = require('../polynomial.js');
 
 var tests = [
   {f: "C", o: "add", a: "-1x^3-1x^2-1x-1", b: 0, r: "-x^3-x^2-x-1"},
