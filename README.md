@@ -15,13 +15,13 @@ P(x) = x^2 + 4x + 3
 Adding two polynomials
 ---
 ```javascript
-var p = new Polynomial("3x^2").add("-x^2"); // 2x^2
+const p = new Polynomial("3x^2").add("-x^2"); // 2x^2
 ```
 
 Second derivative of polynomial
 ---
 ```javascript
-var p = new Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
+const p = new Polynomial("5+3x^3+6x^5").derive(2); // 120x^3+18x
 ```
 
 ## Parser
@@ -71,6 +71,16 @@ Polynomial.js is held general in order to operate on various fields. [Fraction.j
 * ℍ: Quaternions supported by [Quaternion.js](https://github.com/infusion/Quaternion.js)
 * ℤ<sub>p</sub>: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
+
+
+## Accessing Coefficients
+
+```javascript
+const p = new Polynomial("98x^2+4+23x^4");
+
+console.log(p.coeff);
+```
+
 
 ### Examples
 
