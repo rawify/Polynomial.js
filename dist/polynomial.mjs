@@ -1104,5 +1104,5 @@ Polynomial['setField'] = function (field) {
   }
 };
 export {
-  Polynomial as default
+  Polynomial as default, Polynomial
 };
