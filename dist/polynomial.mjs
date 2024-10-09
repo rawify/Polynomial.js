@@ -6,8 +6,6 @@ import Quaternion from 'quaternion';
 
 
 
-
-
 /**
  * The actual field selected
  * 

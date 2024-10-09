@@ -6,8 +6,6 @@ const Quaternion = require('quaternion');
 
 
 
-
-
 /**
  * The actual field selected
  * 

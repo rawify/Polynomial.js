@@ -1,14 +1,14 @@
 /**
- * @license Polynomial.js v1.5.2 10/6/2024
+ * @license Polynomial.js v1.5.3 10/9/2024
  * https://github.com/rawify/Polynomial.js
  *
  * Copyright (c) 2024, Robert Eisele (https://raw.org/)
  * Licensed under the MIT license.
  **/
 
-/* import Fraction from fraction.js */
-/* import Complex from complex.js */
-/* import Quaternion from quaternion */
+import Fraction from 'fraction.js';
+import Complex from 'complex.js';
+import Quaternion from 'quaternion';
 
 
 /**

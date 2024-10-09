@@ -1,7 +1,7 @@
 {
     "name": "polynomial",
     "title": "Polynomial.js",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "homepage": "https://github.com/rawify/Polynomial.js",
     "bugs": "https://github.com/rawify/Polynomial.js/issues",
     "description": "A polynomial library",
@@ -54,12 +54,12 @@
         "test": "mocha tests/*.js"
     },
     "dependencies": {
-        "complex.js": "2.2.3",
-        "fraction.js": "5.0.2",
-        "quaternion": "1.6.2"
+        "complex.js": "2.2.5",
+        "fraction.js": "5.0.3",
+        "quaternion": "1.6.5"
     },
     "devDependencies": {
-        "crude-build": "^0.0.4",
+        "crude-build": "^0.1.1",
         "mocha": "*"
     }
 }
