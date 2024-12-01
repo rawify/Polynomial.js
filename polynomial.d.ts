@@ -1,7 +1,7 @@
 
 declare module 'Polynomial';
 
-declare class Polynomial {
+export class Polynomial {
   
   coeff: Record<string, any>;
 
