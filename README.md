@@ -64,11 +64,11 @@ new Polynomial("5/3x^3+4/3x");
 ## Fields
 
 
-Polynomial.js is held general in order to operate on various fields. [Fraction.js](https://github.com/infusion/Fraction.js) and [Complex.js](https://github.com/infusion/Complex.js) build the perfect base to extend polynomials to rational and complex numbers.
+Polynomial.js is held general in order to operate on various fields. [Fraction.js](https://github.com/rawify/Fraction.js) and [Complex.js](https://github.com/rawify/Complex.js) build the perfect base to extend polynomials to rational and complex numbers.
 
-* ℚ: Rational numbers supported by [Fraction.js](https://github.com/infusion/Fraction.js) 
-* ℂ: Complex numbers supported by [Complex.js](https://github.com/infusion/Complex.js)
-* ℍ: Quaternions supported by [Quaternion.js](https://github.com/infusion/Quaternion.js)
+* ℚ: Rational numbers supported by [Fraction.js](https://github.com/rawify/Fraction.js) 
+* ℂ: Complex numbers supported by [Complex.js](https://github.com/rawify/Complex.js)
+* ℍ: Quaternions supported by [Quaternion.js](https://github.com/rawify/Quaternion.js)
 * ℤ<sub>p</sub>: Field of integers mod p, with p prime
 * ℝ: Field of real numbers
 
@@ -228,14 +228,27 @@ If a really hard error occurs (parsing error, division by zero), *polynomial.js*
 
 ## Installation
 
-Installing Polynomial.js is as easy as cloning this repo or use one of the following command:
+You can install `Polynomial.js` via npm:
 
-
-```
+```bash
 npm install polynomial
 ```
 
-## Using Polynomial.js with the browser
+Or with yarn:
+
+```bash
+yarn add polynomial
+```
+
+Alternatively, download or clone the repository:
+
+```bash
+git clone https://github.com/rawify/Polynomial.js
+```
+
+## Usage
+
+Include the `polynomial.min.js` file in your project:
 
 ```html
 <script src="fraction.min.js"></script> <!-- Needed for field/ring Q -->
@@ -245,6 +258,18 @@ npm install polynomial
 Polynomial.setField("C")
 console.log(Polynomial("4x+3i"));
 </script>
+```
+
+Or in a Node.js project:
+
+```javascript
+const Polynomial = require('polynomial');
+```
+
+or
+
+```javascript
+import Polynomial from 'polynomial';
 ```
 
 

@@ -4,7 +4,7 @@
     "version": "1.5.3",
     "homepage": "https://github.com/rawify/Polynomial.js",
     "bugs": "https://github.com/rawify/Polynomial.js/issues",
-    "description": "A polynomial library",
+    "description": "The RAW polynomial library",
     "keywords": [
         "math",
         "poly",
