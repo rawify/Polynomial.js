@@ -6,56 +6,36 @@ const Quaternion = require('quaternion');
 
 
 
+const STR_REGEXP = /([+-]?)(?:([^+x-]+)?(?:x(?:\^([\d\/]+))?)|([^+x-]+))/g;
+
 /**
  * The actual field selected
  * 
  * @type Object
  */
-var FIELD = {// Run in R
-  "add": function (a, b) {
-    return a + b;
-  },
-  "sub": function (a, b) {
-    return a - b;
-  },
-  "mul": function (a, b) {
-    return a * b;
-  },
-  "div": function (a, b) {
-    if (b === 0) {
-      throw "DIV/0";
-    }
-    return a / b;
-  },
-  "parse": function (x) {
-    return parseFloat(x);
-  },
-  "empty": function (x) {
-    return !x; //undefined === x || 0 === x;
-  },
-  "pow": function (a, b) {
-    return Math.pow(a, b);
-  },
-  "equals": function (a, b) {
-    return a === b;
+const FIELDS = {
+  'R': { // Run in R
+    'add': function (a, b) { return a + b; },
+    'sub': function (a, b) { return a - b; },
+    'mul': function (a, b) { return a * b; },
+    'div': function (a, b) {
+      if (b === 0) throw new Error('DIV/0');
+      return a / b;
+    },
+    'parse': function (x) { return parseFloat(x); },
+    'empty': function (x) { return x === undefined || x === 0; },
+    'pow': function (a, b) { return Math.pow(a, b); },
+    'equals': function (a, b) { return a === b; }
   }
 };
 
-/**
- * Save the original field for changes
- * 
- * @type Object
- */
-var ORIG_FIELD = FIELD;
+let FIELD = FIELDS['R'];
 
-
-var STR_REGEXP = /([+-]?)(?:([^+x-]+)?(?:x(?:\^([\d\/]+))?)|([^+x-]+))/g;
 
 /**
- * The constructor function
- * 
+ * Polynomial constructor
  * @constructor
- * @param {String|Object|number} x The init polynomial
+ * @param {String|Object|number|null} x
  */
 function Polynomial(x) {
 
@@ -69,24 +49,23 @@ function Polynomial(x) {
 Polynomial['trace'] = null;
 
 /**
- * Calculates the modular inverse
- * 
+ * Modular inverse for integers
  * @param {number} z
  * @param {number} n
  * @returns {number}
  */
-var modinv = function (z, n) {
+const modinv = function (z, n) {
 
   /**
    *    z * s + n * t = 1 
    * => z * s mod n = 1
    * => z^-1 = s mod n
    */
-  var tmp = egcd(z, n);
+  const tmp = egcd(z, n);
   if (tmp[0] !== 1) {
-    throw "DIV/-";
+    throw new Error('DIV/-');
   }
-  return tmp[1];
+  return mod(tmp[1], n);
 };
 
 /**
@@ -97,8 +76,8 @@ var modinv = function (z, n) {
  * @returns {number}
  */
 function gcd(a, b) {
-  var t;
-  while (b) {
+
+  for (let t; b;) {
     t = a;
     a = b;
     b = t % b;
@@ -107,12 +86,7 @@ function gcd(a, b) {
 }
 
 function clone(x) {
-
-  var res = {};
-  for (var i in x) {
-    res[i] = x[i];
-  }
-  return res;
+  return Object.assign({}, x);
 }
 
 /**
@@ -122,15 +96,15 @@ function clone(x) {
  * @param {number} b
  * @returns {Array}
  */
-var egcd = function (a, b) {
+const egcd = function (a, b) {
 
   // gcd = a * s  +  b * t
 
-  var s = 0, t = 1, u = 1, v = 0;
+  let s = 0, t = 1, u = 1, v = 0;
   while (a !== 0) {
 
-    var q = b / a | 0, r = b % a;
-    var m = s - u * q, n = t - v * q;
+    const q = b / a | 0, r = b % a;
+    const m = s - u * q, n = t - v * q;
 
     b = a;
     a = r;
@@ -143,39 +117,40 @@ var egcd = function (a, b) {
 };
 
 /**
- * Calculates the mathematical modulo
- * 
+ * Mathematical modulo (always non-negative)
  * @param {number} n
- * @param {number} m 
+ * @param {number} m
  * @returns {number}
  */
-var mod = function (n, m) {
-
+const mod = function (n, m) {
   return (n % m + m) % m;
 };
 
 /**
- * Calculates the factorial n! / (n - k)!
- * 
+ * Falling factorial (n)_k = n * (n-1) * ... * (n-k+1)
+ * with (n)_0 = 1
  * @param {number} n
  * @param {number} k
  * @returns {number}
  */
-var factorial = function (n, k) {
-
-  var p = 1;
-  for (k = n - k; k < n; n--) {
-    p *= n;
-  }
+const fallingFactorial = function (n, k) {
+  let p = 1;
+  for (; k-- > 0; p *= n--){}
   return p;
 };
 
 /**
- * The public coefficient object
- * 
- * @type {Object}
+ * Rising factorial n^(k) = (n+1)(n+2)...(n+k)
+ * with n^(0) = 1
+ * @param {number} n
+ * @param {number} k
+ * @returns {number}
  */
-Polynomial.prototype['coeff'] = {};
+const risingFactorial = function (n, k) {
+  let p = 1;
+  for (; k-- > 0; p *= ++n){}
+  return p;
+};
 
 /**
  * Combines the keys of two objects
@@ -186,15 +161,28 @@ Polynomial.prototype['coeff'] = {};
  */
 function keyUnion(a, b) {
 
-  var k = {};
-  for (var i in a) {
+  const k = {};
+  for (let i in a) {
     k[i] = 1;
   }
-  for (var i in b) {
+  for (let i in b) {
     k[i] = 1;
   }
   return k;
 }
+
+/**
+ * Ensure we only keep non-empty coefficients; coerce keys to numbers.
+ * Mutates and returns the same object for chaining.
+ * @param {Object} obj
+ * @returns {Object}
+ */
+const normalize = function (obj) {
+  for (let k in obj) {
+    if (FIELD['empty'](obj[k])) delete obj[k];
+  }
+  return obj;
+};
 
 /**
  * Gets the degree of the actual polynomial
@@ -204,42 +192,47 @@ function keyUnion(a, b) {
  */
 function degree(x) {
 
-  var i = -Infinity;
+  let i = -Infinity;
 
-  for (var k in x) {
+  for (let k in x) {
     if (!FIELD['empty'](x[k]))
-      i = Math.max(k, i);
+      i = Math.max(+k, i);
   }
   return i;
 }
 
 /**
- * Helper function for division
+ * Division helper: given numerator x (mutated) and denominator y, return quotient q.
+ * Also records steps if Polynomial['trace'] is set.
  * 
  * @param {Object} x The numerator coefficients
  * @param {Object} y The denominator coefficients
  * @returns {Object}
  */
-var div = function (x, y) {
+const div = function (x, y) {
 
-  var r = {};
+  const r = {};
 
-  var i = degree(x);
-  var j = degree(y);
-  var trace = [];
+  let i = degree(x);
+  const j = degree(y);
+  const trace = [];
+
+  if (j < 0) {
+    throw new Error('DIV/0');
+  }
 
   while (i >= j) {
 
-    var tmp = r[i - j] = FIELD['div'](x[i] || 0, y[j] || 0);
+    const tmp = r[i - j] = FIELD['div'](x[i] || 0, y[j] || 0);
 
-    for (var k in y) {
+    for (let k in y) {
       x[+k + i - j] = FIELD['sub'](x[+k + i - j] || 0, FIELD['mul'](y[k] || 0, tmp));
     }
 
     if (Polynomial['trace'] !== null) {
 
-      var tr = {};
-      for (var k in y) {
+      const tr = {};
+      for (let   k in y) {
         tr[+k + i - j] = FIELD['mul'](y[k] || 0, tmp);
       }
       trace.push(new Polynomial(tr));
@@ -253,16 +246,57 @@ var div = function (x, y) {
     trace.push(new Polynomial(x));
     Polynomial['trace'] = trace;
   }
-  return r;
+  return normalize(r);
 };
 
+/**
+ * Leading exponent key (numeric) or null if empty
+ * @param {Object} poly
+ * @returns {number|null}
+ */
+function lcExp(poly) {
+
+  let max = null;
+
+  for (let i in poly) {
+
+    if (!FIELD['empty'](poly[i])) {
+
+      if (max === null || +max < +i) {
+        max = i;
+      }
+    }
+  }
+  return +max;
+}
+
+/**
+ * Make polynomial monic: divide by leading coefficient (in-place)
+ * @param {Object} a
+ * @param {number|null} max leading exponent (if known)
+ * @returns {Object}
+ */
+function makeMonic(a, max) {
+
+  if (max !== null) {
+
+    for (let i in a) {
+      a[i] = FIELD['div'](a[i], a[max]);
+    }
+  }
+  return a;
+}
+
+/**
+ * Parse multiplicative expression part (handles a*b/c chains)
+ */
 function parseExp(sgn, exp) {
 
   exp = String(exp).match(/[^*/]+|[*/]/g);
 
-  var num = FIELD['parse'](sgn + exp[0]);
+  let num = FIELD['parse'](sgn + exp[0]);
 
-  for (var i = 1; i < exp.length; i += 2) {
+  for (let i = 1; i < exp.length; i += 2) {
 
     if (exp[i] === '*') {
       num = FIELD['mul'](num, FIELD['parse'](exp[i + 1] || 1));
@@ -274,14 +308,14 @@ function parseExp(sgn, exp) {
 }
 
 /**
- * Parses the actual number
+ * Parse polynomial input
  * 
- * @param {String|Object|null|number} x The polynomial to be parsed
- * @returns {Object}
+ * @param {String|Object|number|null} x
+ * @returns {Object} sparse coefficient map
  */
-var parse = function (x) {
+const parse = function (x) {
 
-  var ret = {};
+  const ret = {};
 
   if (x === null || x === undefined) {
     x = 0;
@@ -299,7 +333,7 @@ var parse = function (x) {
         ret[0] = x;
       } else
         // Handles Arrays the same way
-        for (var i in x) {
+        for (let i in x) {
 
           if (!FIELD['empty'](x[i])) {
             ret[i] = FIELD['parse'](x[i]);
@@ -308,441 +342,38 @@ var parse = function (x) {
       return ret;
 
     case "number":
-      return { '0': FIELD['parse'](x) };
+      ret[0] = FIELD['parse'](x);
+      return ret;
 
     case "string":
 
-      var tmp;
+      const s = x.replace(/\s+/g, '');
+      STR_REGEXP.lastIndex = 0;
 
-      while (null !== (tmp = STR_REGEXP['exec'](x))) {
+      for (let m; (m = STR_REGEXP['exec'](s)) !== null;) {
+        let num = 1, exp = 1;
 
-        var num = 1;
-        var exp = 1;
-
-        if (tmp[4] !== undefined) {
-          num = tmp[4];
+        if (m[4] !== undefined) {
+          num = m[4];
           exp = 0;
-        } else if (tmp[2] !== undefined) {
-          num = tmp[2];
+        } else if (m[2] !== undefined) {
+          num = m[2];
         }
 
-        num = parseExp(tmp[1], num);
+        num = parseExp(m[1], num);
 
         // Parse exponent
-        if (tmp[3] !== undefined) {
-          exp = parseInt(tmp[3], 10);
-        }
+        if (m[3] !== undefined)
+          exp = parseInt(m[3], 10);
 
-        if (ret[exp] === undefined) {
-          ret[exp] = num;
-        } else {
-          ret[exp] = FIELD['add'](ret[exp], num);
-        }
+        ret[exp] = ret[exp] === undefined
+          ? num
+          : FIELD['add'](ret[exp], num);
       }
       return ret;
   }
-  throw "Invalid Param";
+  throw new Error("Invalid Param");
 };
-
-/**
- * Calculates the gcd of two polynomials
- * 
- * @param {String|Object} x The denominator polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['gcd'] = function (x) {
-
-  var a = clone(this['coeff']);
-  var b = parse(x);
-
-  var max;
-
-  while (!isNull(b)) {
-
-    var r = clone(a);
-
-    div(r, b);
-
-    a = b;
-    b = r;
-  }
-
-  max = lc(a);
-
-  return new Polynomial(monic(a, max));
-};
-
-/**
- * Negate all coefficients of the polynomial
- * 
- * @returns {Polynomial}
- */
-Polynomial.prototype['neg'] = function () {
-
-  var ret = {};
-  var poly = this['coeff'];
-
-  for (var i in poly) {
-    ret[i] = FIELD['mul'](poly[i], -1);
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Return the 'reciprocal polynomial', where the coefficients
- * appear in opposite order; i.e. a[i] -> a[n-i].
- * See e.g. https://en.wikipedia.org/wiki/Reciprocal_polynomial
- *
- * @returns {Polynomial}
- */
-Polynomial.prototype['reciprocal'] = function () {
-
-  var ret = {};
-  var poly = this['coeff'];
-  var n = degree(poly);
-
-  for (var i in poly) {
-    ret[n - i] = poly[i];
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Numerically evaluate the polynomial at a specific point x by
- * using Horner's method.
- * See e.g. https://en.wikipedia.org/wiki/Horner%27s_method
- *
- * @param {number} x The point where to evaluate this polynomial
- * @returns {number} The value P(x)
- */
-Polynomial.prototype['eval'] = function (x) {
-
-  var poly = this['coeff'];
-  var n = degree(poly);
-
-  if (n < 0) {
-    return 0;
-  }
-
-  var ret = poly[n];
-
-  for (var i = n - 1; i >= 0; i--) {
-    ret = FIELD['mul'](ret, x);
-    if (!FIELD['empty'](poly[i])) {
-      ret = FIELD['add'](ret, poly[i]);
-    }
-  }
-  return ret;
-};
-
-function lc(poly) {
-
-  var max = null;
-
-  for (var i in poly) {
-
-    if (!FIELD['empty'](poly[i])) {
-
-      if (max === null || +max < +i) {
-        max = i;
-      }
-    }
-  }
-  return max;
-}
-
-function monic(a, max) {
-
-  if (max !== null) {
-
-    for (var i in a) {
-      a[i] = FIELD['div'](a[i], a[max]);
-    }
-  }
-  return a;
-}
-
-/**
- * Gets the leading coefficient
- * 
- * @returns {Polynomial}
- */
-Polynomial.prototype['lc'] = function () {
-
-  var max = lc(this['coeff']);
-
-  return this['coeff'][max];
-};
-
-/**
- * Gets the leading monomial
- * 
- * @returns {Polynomial}
- */
-Polynomial.prototype['lm'] = function () {
-
-  var max = lc(this['coeff']);
-
-  var res = {};
-
-  res[max] = this['coeff'][max];
-  return new Polynomial(res);
-};
-
-/**
- * Divide all coefficients of f by lc(f)
- * 
- * @returns {Polynomial}
- */
-Polynomial.prototype['monic'] = function () {
-
-  return new Polynomial(monic(clone(this['coeff']), lc(this['coeff'])));
-};
-
-/**
- * Calculates the sum of two polynomials
- * 
- * @param {String|Object} x The summand polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['add'] = function (x) {
-
-  var para = parse(x);
-
-  var ret = {};
-  var poly = this['coeff'];
-
-  var keys = keyUnion(para, poly);
-
-  for (var i in keys) {
-    ret[i] = FIELD['add'](poly[i] || 0, para[i] || 0);
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Calculates the difference of two polynomials
- * 
- * @param {String|Object} x The subtrahend polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['sub'] = function (x) {
-
-  var para = parse(x);
-
-  var ret = {};
-  var poly = this['coeff'];
-
-  var keys = keyUnion(para, poly);
-
-  for (var i in keys) {
-    ret[i] = FIELD['sub'](poly[i] || 0, para[i] || 0);
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Calculates the product of two polynomials
- * 
- * @param {String|Object} x The minuend polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['mul'] = function (x) {
-
-  var para = parse(x);
-
-  var ret = {};
-  var poly = this['coeff'];
-
-  for (var i in para) {
-
-    i = +i;
-
-    for (var j in poly) {
-
-      j = +j;
-
-      ret[i + j] = FIELD['add'](ret[i + j] || 0, FIELD['mul'](para[i] || 0, poly[j] || 0));
-    }
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Calculates the product of the two parameters and adds it to the current number (linear combination)
- * 
- * @param {String|Object} x The first factor polynomial
- * @param {String|Object} y The second factor polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['addmul'] = function (x, y) {
-
-  var _x = parse(x);
-  var _y = parse(y);
-
-  var res = {};
-  for (var i in _x) {
-
-    i = +i;
-
-    for (var j in _y) {
-      j = +j;
-
-      res[i + j] = FIELD['add'](res[i + j] || 0, FIELD['mul'](_x[i] || 0, _y[j] || 0));
-    }
-  }
-  return this['add'](res);
-};
-
-/**
- * Calculates the quotient of two polynomials
- * 
- * @param {String|Object} x The denominator polynomial
- * @returns {Polynomial}
- */
-Polynomial.prototype['div'] = function (x) {
-
-  return new Polynomial(div(clone(this['coeff']), parse(x)));
-};
-
-/**
- * Calculates the pow of a polynomial to the exponent e
- * 
- * @returns {Polynomial}
- */
-Polynomial.prototype['pow'] = function (e) {
-
-  if (isNaN(e) || e < 0 || e % 1) { // Only integer exponents
-    throw "Invalid";
-  }
-
-  var res = new Polynomial(1);
-  var tmp = this;
-
-  while (e > 0) {
-
-    if (e & 1) {
-      res = res['mul'](tmp);
-    }
-    tmp = tmp['mul'](tmp);
-    e >>= 1;
-  }
-  return res;
-};
-
-/**
- * Calculates the modulo of a polynomial to another
- * 
- * @param {String|Object} x The second poly
- * @returns {Polynomial}
- */
-Polynomial.prototype['mod'] = function (x) {
-
-  var mod = clone(this['coeff']);
-
-  div(mod, parse(x));
-
-  return new Polynomial(mod);
-};
-
-/**
- * Calculates the nth derivative of the polynomial
- * 
- * @param {number} n The nth derivative
- * @returns {Polynomial}
- */
-Polynomial.prototype['derive'] = function (n) {
-
-  if (n === undefined) {
-    n = 1;
-  } else if (n < 0) {
-    return null;
-  }
-
-  var poly = this['coeff'];
-  var ret = {};
-
-  for (var i in poly) {
-
-    if (+i >= n)
-      ret[i - n] = FIELD['mul'](poly[i] || 0, factorial(+i, n));
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Calculates the nth integral of the polynomial
- * 
- * @param {number} n The nth integral
- * @returns {Polynomial}
- */
-Polynomial.prototype['integrate'] = function (n) {
-
-  if (n === undefined) {
-    n = 1;
-  } else if (n < 0) {
-    return null;
-  }
-
-  var poly = this['coeff'];
-  var ret = {};
-
-  for (var i in poly) {
-    ret[+i + n] = FIELD['div'](poly[i] || 0, factorial(+i + n, n));
-  }
-  return new Polynomial(ret);
-};
-
-/**
- * Form a (monic) polynomial out of an array of roots
- *
- * @param {Array<number>} roots - Array of roots
- * @returns {Polynomial} The monic polynomial with those roots
- */
-Polynomial['fromRoots'] = function (roots) {
-
-  var n = roots.length;
-
-  var zero = FIELD['parse'](0);
-
-  var nonZeroRoots = roots.filter(root => (!(FIELD['equals'](root, zero))));
-  var numZeros = n - nonZeroRoots.length;
-
-  // First we construct the depressed polynomial with a recursive
-  // strategy (this minimizes the number of multiplications)
-  var pOne = new Polynomial(FIELD['parse'](1));
-
-  function productHelper(r) {
-    switch (r.length) {
-      case 0:
-        return pOne;
-      case 1:
-        return new Polynomial([FIELD['mul'](r[0], -1), 1]);
-      default: // recurse
-        var nLeft = Math.floor(r.length / 2);
-        var left = r.slice(0, nLeft);
-        var right = r.slice(nLeft, r.length);
-        return productHelper(left).mul(productHelper(right));
-    }
-  }
-
-  var dep = productHelper(nonZeroRoots);
-
-  // Now raise the order by including numZeros zeros
-  var dcoeff = dep['coeff'];
-  var coeff = {};
-
-  for (var i in dcoeff) {
-    coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
-  }
-
-  return new Polynomial(coeff);
-};
-
-function isNull(r) {
-
-  return degree(r) < 0;
-}
 
 /**
  * Helper method to stringify
@@ -750,19 +381,19 @@ function isNull(r) {
  * @param {string} fn the callback name
  * @returns {Function}
  */
-var toString = function (fn) {
+const toString = function (fn) {
 
   /**
    * The actual to string function 
    * 
    * @returns {string|null}
    */
-  var Str = function () {
+  const Str = function () {
 
-    var poly = this['coeff'];
+    const poly = this['coeff'];
 
-    var keys = [];
-    for (var i in poly) {
+    const keys = [];
+    for (const i in poly) {
       keys.push(+i);
     }
 
@@ -773,14 +404,14 @@ var toString = function (fn) {
       return a - b;
     });
 
-    var str = "";
-    for (var k = keys.length; k--;) {
+    let str = "";
+    for (let k = keys.length; k--;) {
 
-      var i = keys[k];
+      const i = keys[k];
 
-      var cur = poly[i];
+      const cur = poly[i];
 
-      var val = cur;
+      let val = cur;
 
       if (val === null || val === undefined)
         continue;
@@ -859,7 +490,7 @@ var toString = function (fn) {
     }
 
     if (str === "")
-      return cur[fn] ? cur[fn]() : cur['toString']();
+      return "0";
 
     return str;
   };
@@ -867,159 +498,540 @@ var toString = function (fn) {
 };
 
 /**
- * Formats the polynomial as a string
+ * The public coefficient object
  * 
- * @returns {string} The polynomial string
+ * @type {Object}
  */
-Polynomial.prototype['toString'] = toString("toString");
+Polynomial.prototype = {
+  'coeff': null,
+  /**
+   * GCD over a field using Euclidean algorithm; returns monic gcd
+   * @param {String|Object} x
+   * @returns {Polynomial}
+   */
+  'gcd': function (x) {
 
-/**
- * Formats the polynomial as a latex representation
- * 
- * @returns {string} The polynomial latex string
- */
-Polynomial.prototype['toLatex'] = toString("toLatex");
+    let a = normalize(clone(this['coeff']));
+    let b = normalize(parse(x));
 
-/**
- * Returns the actual polynomial in horner scheme
- * 
- * @returns {string}
- */
-Polynomial.prototype['toHorner'] = function () {
+    if (isZeroPoly(a)) return new Polynomial(makeMonic(b, lcExp(b)));
+    if (isZeroPoly(b)) return new Polynomial(makeMonic(a, lcExp(a)));
 
-  var poly = this['coeff'];
-  var keys = [];
-  for (var i in poly) {
-    if (!FIELD.empty(poly[i]))
-      keys.push(+i);
-  }
+    while (!isZeroPoly(b)) {
 
-  if (keys.length === 0)
-    return "0";
+      const r = normalize(clone(a));
 
-  keys.sort(function (a, b) {
-    return a - b;
-  });
+      div(r, b); // r becomes remainder
 
-  // TODO: DRY, Combine with toString function
-  function valToString(val, hasSign) {
+      a = b;
+      b = r;
+    }
 
-    var str = "";
+    return new Polynomial(makeMonic(a, lcExp(a)));
+  },
 
-    if (Complex && val instanceof Complex) {
+  /**
+   * Negate all coefficients of the polynomial
+   * 
+   * @returns {Polynomial}
+   */
+  'neg': function () {
 
-      if (val['im'] === 0) {
+    const ret = {};
+    const poly = this['coeff'];
 
-        if (val['re'] > 0 && hasSign) {
-          str += "+";
-        }
-        str += val['re'];
+    for (const i in poly) {
+      ret[i] = FIELD['mul'](poly[i], -1);
+    }
+    return new Polynomial(ret);
+  },
 
-      } else if (val['re'] === 0) {
+  /**
+   * Return the 'reciprocal polynomial', where the coefficients
+   * appear in opposite order; i.e. a[i] -> a[n-i].
+   * See e.g. https://en.wikipedia.org/wiki/Reciprocal_polynomial
+   *
+   * @returns {Polynomial}
+   */
+  'reciprocal': function () {
 
-        if (val['im'] === -1) {
-          str += "-";
-        } else if (val['im'] !== 1) {
+    const ret = {};
+    const poly = this['coeff'];
+    const n = degree(poly);
 
-          if (val['im'] > 0 && hasSign) {
+    for (const i in poly) {
+      ret[n - i] = poly[i];
+    }
+    return new Polynomial(ret);
+  },
+
+  /**
+   * Numerically evaluate the polynomial at a specific point x by
+   * using Horner's method.
+   * See e.g. https://en.wikipedia.org/wiki/Horner%27s_method
+   *
+   * @param {number} x The point where to evaluate this polynomial
+   * @returns {number} The value P(x)
+   */
+  'eval': function (x) {
+
+    const poly = this['coeff'];
+    const n = degree(poly);
+
+    if (n < 0) {
+      return 0;
+    }
+
+    let ret = poly[n];
+
+    for (let i = n - 1; i >= 0; i--) {
+      ret = FIELD['mul'](ret, x);
+      if (!FIELD['empty'](poly[i])) {
+        ret = FIELD['add'](ret, poly[i]);
+      }
+    }
+    return ret;
+  },
+
+  /**
+   * Gets the leading coefficient
+   * 
+   * @returns {Polynomial}
+   */
+  'lc': function () {
+
+    const e = lcExp(this['coeff']);
+    return e === null ? undefined : this['coeff'][e];
+  },
+
+  /**
+   * Gets the leading monomial
+   * 
+   * @returns {Polynomial}
+   */
+  'lm': function () {
+
+    const e = lcExp(this['coeff']);
+    const res = {};
+    if (e !== null)
+      res[e] = this['coeff'][e];
+    return new Polynomial(res);
+  },
+
+  /**
+   * Divide all coefficients of f by lc(f)
+   * 
+   * @returns {Polynomial}
+   */
+  'monic': function () {
+
+    return new Polynomial(makeMonic(clone(this['coeff']), lcExp(this['coeff'])));
+  },
+
+  /**
+   * Calculates the sum of two polynomials
+   * 
+   * @param {String|Object} x The summand polynomial
+   * @returns {Polynomial}
+   */
+  'add': function (x) {
+
+    const para = parse(x);
+
+    const ret = {};
+    const poly = this['coeff'];
+
+    const keys = keyUnion(para, poly);
+
+    for (const i in keys) {
+      ret[i] = FIELD['add'](poly[i] || 0, para[i] || 0);
+    }
+    return new Polynomial(ret);
+  },
+
+  /**
+   * Calculates the difference of two polynomials
+   * 
+   * @param {String|Object} x The subtrahend polynomial
+   * @returns {Polynomial}
+   */
+  'sub': function (x) {
+
+    const para = parse(x);
+
+    const ret = {};
+    const poly = this['coeff'];
+
+    const keys = keyUnion(para, poly);
+
+    for (const i in keys) {
+      ret[i] = FIELD['sub'](poly[i] || 0, para[i] || 0);
+    }
+    return new Polynomial(ret);
+  },
+
+  /**
+   * Calculates the product of two polynomials
+   * 
+   * @param {String|Object} x The minuend polynomial
+   * @returns {Polynomial}
+   */
+  'mul': function (x) {
+
+    const para = parse(x);
+
+    const ret = {};
+    const poly = this['coeff'];
+
+    for (let i in para) {
+
+      i = +i;
+
+      for (let j in poly) {
+
+        j = +j;
+
+        ret[i + j] = FIELD['add'](ret[i + j] || 0, FIELD['mul'](para[i] || 0, poly[j] || 0));
+      }
+    }
+    return new Polynomial(normalize(ret));
+  },
+
+  /**
+   * Calculates the product of the two parameters and adds it to the current number (linear combination)
+   * 
+   * @param {String|Object} x The first factor polynomial
+   * @param {String|Object} y The second factor polynomial
+   * @returns {Polynomial}
+   */
+  'addmul': function (x, y) {
+
+    const _x = parse(x);
+    const _y = parse(y);
+
+    const res = {};
+    for (let i in _x) {
+
+      i = +i;
+
+      for (let j in _y) {
+        j = +j;
+
+        res[i + j] = FIELD['add'](res[i + j] || 0, FIELD['mul'](_x[i] || 0, _y[j] || 0));
+      }
+    }
+    return this['add'](normalize(res));
+  },
+
+  /**
+   * Calculates the quotient of two polynomials
+   * 
+   * @param {String|Object} x The denominator polynomial
+   * @returns {Polynomial}
+   */
+  'div': function (x) {
+
+    return new Polynomial(div(clone(this['coeff']), parse(x)));
+  },
+
+  /**
+   * Calculates the pow of a polynomial to the exponent natural number e
+   * 
+   * @returns {Polynomial}
+   */
+  'pow': function (e) {
+
+    if (isNaN(e) || e < 0 || e % 1) { // Only integer exponents
+      throw new Error("Invalid");
+    }
+
+    let res = new Polynomial(1);
+    let tmp = this;
+
+    while (e > 0) {
+
+      if (e & 1) {
+        res = res['mul'](tmp);
+      }
+      tmp = tmp['mul'](tmp);
+      e >>= 1;
+    }
+    return res;
+  },
+
+  /**
+   * Calculates the modulo of a polynomial to another
+   * 
+   * @param {String|Object} x The second poly
+   * @returns {Polynomial}
+   */
+  'mod': function (x) {
+
+    const mod = clone(this['coeff']);
+
+    div(mod, parse(x));
+
+    return new Polynomial(mod);
+  },
+
+  /**
+   * Calculates the nth derivative of the polynomial
+   * 
+   * @param {number} n The nth derivative
+   * @returns {Polynomial}
+   */
+  'derive': function (n) {
+
+    if (n === undefined) {
+      n = 1;
+    } else if (n < 0) {
+      return null;
+    }
+
+    const poly = this['coeff'];
+    const ret = {};
+
+    for (const i in poly) {
+
+      if (+i >= n)
+        ret[i - n] = FIELD['mul'](poly[i] || 0, fallingFactorial(+i, n));
+    }
+    return new Polynomial(ret);
+  },
+
+  /**
+   * Calculates the nth integral of the polynomial
+   * 
+   * @param {number} n The nth integral
+   * @returns {Polynomial}
+   */
+  'integrate': function (n) {
+
+    if (n === undefined) {
+      n = 1;
+    } else if (n < 0) {
+      return null;
+    }
+
+    const poly = this['coeff'];
+    const ret = {};
+
+    for (const i in poly) {
+      // divide by (i+1)(i+2)...(i+n)
+      ret[+i + n] = FIELD['div'](poly[i] || 0, risingFactorial(+i, n));
+    }
+    return new Polynomial(ret);
+  },
+
+  /**
+   * Formats the polynomial as a string
+   * 
+   * @returns {string} The polynomial string
+   */
+  'toString': toString("toString"),
+
+  /**
+   * Formats the polynomial as a latex representation
+   * 
+   * @returns {string} The polynomial latex string
+   */
+  'toLatex': toString("toLatex"),
+
+  /**
+   * Returns the actual polynomial in horner scheme
+   * 
+   * @returns {string}
+   */
+  'toHorner': function () {
+
+    const poly = this['coeff'];
+    const keys = [];
+    for (const i in poly) {
+      if (!FIELD.empty(poly[i]))
+        keys.push(+i);
+    }
+
+    if (keys.length === 0)
+      return "0";
+
+    keys.sort(function (a, b) {
+      return a - b;
+    });
+
+    // TODO: DRY, Combine with toString function
+    function valToString(val, hasSign) {
+
+      let str = "";
+
+      if (Complex && val instanceof Complex) {
+
+        if (val['im'] === 0) {
+
+          if (val['re'] > 0 && hasSign) {
             str += "+";
           }
-          str += val['im'];
+          str += val['re'];
+
+        } else if (val['re'] === 0) {
+
+          if (val['im'] === -1) {
+            str += "-";
+          } else if (val['im'] !== 1) {
+
+            if (val['im'] > 0 && hasSign) {
+              str += "+";
+            }
+            str += val['im'];
+          } else {
+            if (val['im'] > 0 && hasSign) {
+              str += "+";
+            }
+          }
+          str += "i";
+
         } else {
-          if (val['im'] > 0 && hasSign) {
+
+          if (hasSign) {
             str += "+";
           }
+
+          str += "(";
+          str += val.toString();
+          str += ")";
         }
-        str += "i";
+
+        return str;
 
       } else {
 
-        if (hasSign) {
+        if (val > 0 && hasSign) {
           str += "+";
         }
-
-        str += "(";
         str += val.toString();
-        str += ")";
       }
-
       return str;
+    }
 
-    } else {
+    function rec(keys, pos) {
 
-      if (val > 0 && hasSign) {
-        str += "+";
+      const ndx = keys.length - pos - 1;
+      const exp = keys[ndx] - (keys[ndx - 1] || 0);
+      let str1 = "";
+      let str2 = "";
+
+      if (exp > 0) {
+        str1 = "x";
+
+        if (exp > 1) {
+          str1 += "^" + exp;
+        }
       }
-      str += val.toString();
-    }
-    return str;
-  }
 
-  function rec(keys, pos) {
+      if (ndx > 0)
+        str1 += valToString(poly[keys[ndx - 1]], true);
 
-    var ndx = keys.length - pos - 1;
-    var exp = keys[ndx] - (keys[ndx - 1] || 0);
-    var str1 = "";
-    var str2 = "";
-
-    if (exp > 0) {
-      str1 = "x";
-
-      if (exp > 1) {
-        str1 += "^" + exp;
+      if (pos === 0) {
+        return valToString(poly[keys[ndx]], false) + str1;
       }
+
+      if (ndx >= 0 && keys[ndx])
+        str2 += "(";
+
+      str2 += rec(keys, pos - 1);
+
+      if (ndx >= 0 && keys[ndx])
+        str2 += ")";
+
+      str2 += str1;
+
+      return str2;
     }
+    return rec(keys, keys.length - 1);
+  },
 
-    if (ndx > 0)
-      str1 += valToString(poly[keys[ndx - 1]], true);
+  /**
+   * Clones the actual object
+   * 
+   * @returns {Polynomial}
+   */
+  'clone': function () {
+    return new Polynomial(this);
+  },
 
-    if (pos === 0) {
-      return valToString(poly[keys[ndx]], false) + str1;
-    }
+  /**
+   * Returns the degree of the polynomial
+   * 
+   * @returns {number}
+   */
+  'degree': function () {
 
-    if (ndx >= 0 && keys[ndx])
-      str2 += "(";
-
-    str2 += rec(keys, pos - 1);
-
-    if (ndx >= 0 && keys[ndx])
-      str2 += ")";
-
-    str2 += str1;
-
-    return str2;
+    return degree(this['coeff']);
   }
-  return rec(keys, keys.length - 1);
 };
 
 /**
- * Clones the actual object
- * 
- * @returns {Polynomial}
+ * Form a (monic) polynomial out of an array of roots
+ *
+ * @param {Array<number>} roots - Array of roots
+ * @returns {Polynomial} The monic polynomial with those roots
  */
-Polynomial.prototype['clone'] = function () {
-  return new Polynomial(this);
+Polynomial['fromRoots'] = function (roots) {
+
+  const n = roots.length;
+
+  const zero = FIELD['parse'](0);
+
+  const nonZeroRoots = roots.filter(root => !(FIELD['equals'](root, zero)));
+  const numZeros = n - nonZeroRoots.length;
+
+  // First we construct the depressed polynomial with a recursive
+  // strategy (this minimizes the number of multiplications)
+  const pOne = new Polynomial(FIELD['parse'](1));
+
+  function productHelper(r) {
+    switch (r.length) {
+      case 0:
+        return pOne;
+      case 1:
+        return new Polynomial([FIELD['mul'](r[0], -1), 1]);
+      default: // recurse
+        const nLeft = Math.floor(r.length / 2);
+        const left = r.slice(0, nLeft);
+        const right = r.slice(nLeft, r.length);
+        return productHelper(left)['mul'](productHelper(right));
+    }
+  }
+
+  const dep = productHelper(nonZeroRoots);
+
+  // Now raise the order by including numZeros zeros
+  const dcoeff = dep['coeff'];
+  const coeff = {};
+
+  for (let i in dcoeff) {
+    coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
+  }
+
+  return new Polynomial(coeff);
 };
 
-/**
- * Returns the degree of the polynomial
- * 
- * @returns {number}
+/** 
+ * True if polynomial map has no non-empty terms
  */
-Polynomial.prototype['degree'] = function () {
+function isZeroPoly(r) {
 
-  return degree(this['coeff']);
-};
+  return degree(r) < 0;
+}
 
 /**
  * Set the field globally
  * 
- * @param {string|Object} field One of: C (complex), H (quaternion), Q (rational), R (real) or an object with methods for field
+ * @param {string|Object} field One of: C (complex), H (quaternion), Q (rational), R (real), Z<n>, or a custom field object
  */
 Polynomial['setField'] = function (field) {
 
   // Fields with the same common API
-  var F = {
+  const F = {
     "Q": Fraction,
     "C": Complex,
     "H": Quaternion
@@ -1028,35 +1040,19 @@ Polynomial['setField'] = function (field) {
   if (F !== undefined) {
 
     FIELD = {
-      "add": function (a, b) {
-        return new F(a)['add'](b);
-      },
-      "sub": function (a, b) {
-        return new F(a)['sub'](b);
-      },
-      "mul": function (a, b) {
-        return new F(a)['mul'](b);
-      },
-      "div": function (a, b) {
-        return new F(a)['div'](b);
-      },
-      "parse": function (x) {
-        return new F(x);
-      },
-      "empty": function (x) {
-        return new F(x)['equals'](0);
-      },
-      "pow": function (a, b) {
-        return new F(a)['pow'](b);
-      },
-      "equals": function (a, b) {
-        return new F(a)['equals'](b);
-      }
+      'add': function (a, b) { return new F(a)['add'](b); },
+      'sub': function (a, b) { return new F(a)['sub'](b); },
+      'mul': function (a, b) { return new F(a)['mul'](b); },
+      'div': function (a, b) { return new F(a)['div'](b); },
+      'parse': function (x) { return new F(x); },
+      'empty': function (x) { return new F(x)['equals'](0); },
+      'pow': function (a, b) { return new F(a)['pow'](b); },
+      'equals': function (a, b) { return new F(a)['equals'](b); }
     };
 
   } else if (!field || field === 'R') {
 
-    FIELD = ORIG_FIELD;
+    FIELD = FIELDS['R'];
 
   } else if (typeof field === 'object') {
 
@@ -1064,40 +1060,29 @@ Polynomial['setField'] = function (field) {
 
   } else if (field.charAt(0) === 'Z') {
 
-    var N = +field.slice(1);
+    const N = +field.slice(1);
 
     FIELD = {// Test in Z_n
-      "add": function (a, b) {
-        return mod(a + b, N);
-      },
-      "sub": function (a, b) {
-        return mod(a - b, N);
-      },
-      "mul": function (a, b) {
-        return mod(a * b, N);
-      },
-      "div": function (a, b) {
-        return mod(a * modinv(b, N), N);
-      },
-      "parse": function (x) {
-        return parseInt(x, 10);
-      },
-      "empty": function (x) {
-        return undefined === x || 0 === x;
-      },
+      'add': function (a, b) { return mod(a + b, N); },
+      'sub': function (a, b) { return mod(a - b, N); },
+      'mul': function (a, b) { return mod(a * b, N); },
+      'div': function (a, b) { return mod(a * modinv(b, N), N); },
+      'parse': function (x) { return parseInt(x, 10); },
+      'empty': function (x) { return x === undefined || x === 0; },
       "pow": function (a, b) {
 
-        for (var r = 1; b > 0; a = mod(a * a, N), b >>= 1) {
+        let r = 1;
+        while (b > 0) {
 
           if (b & 1) {
             r = mod(r * a, N);
           }
+          a = mod(a * a, N);
+          b >>= 1;
         }
         return r;
       },
-      "equals": function (a, b) {
-        return a == b;
-      }
+      'equals': function (a, b) { return a == b; }
     };
   }
 };
