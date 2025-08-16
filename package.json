@@ -1,10 +1,10 @@
 {
     "name": "polynomial",
     "title": "Polynomial.js",
-    "version": "1.6.0",
+    "version": "1.6.1",
+    "description": "The RAW polynomial library",
     "homepage": "https://github.com/rawify/Polynomial.js",
     "bugs": "https://github.com/rawify/Polynomial.js/issues",
-    "description": "The RAW polynomial library",
     "keywords": [
         "math",
         "poly",
@@ -18,17 +18,38 @@
     "private": false,
     "main": "./dist/polynomial.js",
     "module": "./dist/polynomial.mjs",
-    "types": "./polynomial.d.ts",
     "browser": "./dist/polynomial.min.js",
     "unpkg": "./dist/polynomial.min.js",
-    "readmeFilename": "README.md",
+    "types": "./polynomial.d.ts",
     "exports": {
         ".": {
-            "types": "./polynomial.d.ts",
-            "require": "./dist/polynomial.js",
-            "import": "./dist/polynomial.mjs"
+            "import": {
+                "types": "./polynomial.d.mts",
+                "default": "./dist/polynomial.mjs"
+            },
+            "require": {
+                "types": "./polynomial.d.ts",
+                "default": "./dist/polynomial.js"
+            },
+            "browser": {
+                "types": "./polynomial.d.ts",
+                "default": "./dist/polynomial.min.js"
+            },
+            "default": {
+                "types": "./polynomial.d.ts",
+                "default": "./dist/polynomial.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "typesVersions": {
+        "<4.7": {
+            "*": [
+                "polynomial.d.ts"
+            ]
         }
     },
+    "sideEffects": false,
     "repository": {
         "type": "git",
         "url": "git@github.com:rawify/Polynomial.js.git"
@@ -56,7 +77,7 @@
     "dependencies": {
         "complex.js": "2.4.2",
         "fraction.js": "5.2.2",
-        "quaternion": "2.1.0"
+        "quaternion": "2.1.1"
     },
     "devDependencies": {
         "crude-build": "^0.1.2",

@@ -159,4 +159,4 @@ class Polynomial {
   static fromRoots(roots: number[]): Polynomial;
 }
 
-export = Polynomial;
+export { Polynomial as default, Polynomial };

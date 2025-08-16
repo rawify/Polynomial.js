@@ -135,7 +135,7 @@ const mod = function (n, m) {
  */
 const fallingFactorial = function (n, k) {
   let p = 1;
-  for (; k-- > 0; p *= n--){}
+  for (; k-- > 0; p *= n--) { }
   return p;
 };
 
@@ -148,7 +148,7 @@ const fallingFactorial = function (n, k) {
  */
 const risingFactorial = function (n, k) {
   let p = 1;
-  for (; k-- > 0; p *= ++n){}
+  for (; k-- > 0; p *= ++n) { }
   return p;
 };
 
@@ -161,7 +161,7 @@ const risingFactorial = function (n, k) {
  */
 function keyUnion(a, b) {
 
-  const k = {};
+  const k = Object.create(null);
   for (let i in a) {
     k[i] = 1;
   }
@@ -211,7 +211,7 @@ function degree(x) {
  */
 const div = function (x, y) {
 
-  const r = {};
+  const r = Object.create(null);
 
   let i = degree(x);
   const j = degree(y);
@@ -231,8 +231,8 @@ const div = function (x, y) {
 
     if (Polynomial['trace'] !== null) {
 
-      const tr = {};
-      for (let   k in y) {
+      const tr = Object.create(null);
+      for (let k in y) {
         tr[+k + i - j] = FIELD['mul'](y[k] || 0, tmp);
       }
       trace.push(new Polynomial(tr));
@@ -315,7 +315,7 @@ function parseExp(sgn, exp) {
  */
 const parse = function (x) {
 
-  const ret = {};
+  const ret = Object.create(null);
 
   if (x === null || x === undefined) {
     x = 0;
@@ -537,7 +537,7 @@ Polynomial.prototype = {
    */
   'neg': function () {
 
-    const ret = {};
+    const ret = Object.create(null);
     const poly = this['coeff'];
 
     for (const i in poly) {
@@ -555,7 +555,7 @@ Polynomial.prototype = {
    */
   'reciprocal': function () {
 
-    const ret = {};
+    const ret = Object.create(null);
     const poly = this['coeff'];
     const n = degree(poly);
 
@@ -612,7 +612,7 @@ Polynomial.prototype = {
   'lm': function () {
 
     const e = lcExp(this['coeff']);
-    const res = {};
+    const res = Object.create(null);
     if (e !== null)
       res[e] = this['coeff'][e];
     return new Polynomial(res);
@@ -638,7 +638,7 @@ Polynomial.prototype = {
 
     const para = parse(x);
 
-    const ret = {};
+    const ret = Object.create(null);
     const poly = this['coeff'];
 
     const keys = keyUnion(para, poly);
@@ -659,7 +659,7 @@ Polynomial.prototype = {
 
     const para = parse(x);
 
-    const ret = {};
+    const ret = Object.create(null);
     const poly = this['coeff'];
 
     const keys = keyUnion(para, poly);
@@ -680,7 +680,7 @@ Polynomial.prototype = {
 
     const para = parse(x);
 
-    const ret = {};
+    const ret = Object.create(null);
     const poly = this['coeff'];
 
     for (let i in para) {
@@ -709,7 +709,7 @@ Polynomial.prototype = {
     const _x = parse(x);
     const _y = parse(y);
 
-    const res = {};
+    const res = Object.create(null);
     for (let i in _x) {
 
       i = +i;
@@ -789,7 +789,7 @@ Polynomial.prototype = {
     }
 
     const poly = this['coeff'];
-    const ret = {};
+    const ret = Object.create(null);
 
     for (const i in poly) {
 
@@ -814,7 +814,7 @@ Polynomial.prototype = {
     }
 
     const poly = this['coeff'];
-    const ret = {};
+    const ret = Object.create(null);
 
     for (const i in poly) {
       // divide by (i+1)(i+2)...(i+n)
@@ -1006,7 +1006,7 @@ Polynomial['fromRoots'] = function (roots) {
 
   // Now raise the order by including numZeros zeros
   const dcoeff = dep['coeff'];
-  const coeff = {};
+  const coeff = Object.create(null);
 
   for (let i in dcoeff) {
     coeff[numZeros + parseInt(i, 10)] = dcoeff[i];
