@@ -1,35 +1,17 @@
+'use strict';
 
 const Polynomial = require('polynomial');
 
-Polynomial.setField({
-    "add": function (a, b) {
-        return BigInt(a) + BigInt(b);
-    },
-    "sub": function (a, b) {
-        return BigInt(a) - BigInt(b);
-    },
-    "mul": function (a, b) {
-        return BigInt(a) * BigInt(b);
-    },
-    "div": function (a, b) {
-        return BigInt(a) / BigInt(b);
-    },
-    "parse": function (x) {
-        return BigInt(x);
-    },
-    "empty": function (x) {
-        return BigInt(x) === BigInt(0);
-    },
-    "pow": function (a, b) {
-        return BigInt(a) ** BigInt(b);
-    },
-    "abs": function (a) {
-        a = BigInt(a);
-        if (a < 0n) {
-            return -a;
-        }
-        return a;
-    }
-});
+const bigintField = {
+  add: (left, right) => BigInt(left) + BigInt(right),
+  sub: (left, right) => BigInt(left) - BigInt(right),
+  mul: (left, right) => BigInt(left) * BigInt(right),
+  div: (left, right) => BigInt(left) / BigInt(right),
+  parse: value => BigInt(value),
+  empty: value => value === undefined || BigInt(value) === 0n,
+  pow: (base, exponent) => BigInt(base) ** BigInt(exponent),
+  equals: (left, right) => BigInt(left) === BigInt(right),
+};
 
-console.log(new Polynomial("3891238912389182391919282829x^3+4").add("23819218x^2-381").toString());
+const polynomial = new Polynomial('3891238912389182391919282829x^3+4', bigintField);
+console.log(polynomial.add('23819218x^2-381').toString());

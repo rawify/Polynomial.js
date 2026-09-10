@@ -1,0 +1,6 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Polynomial.js",
+  "description": "Polynomial parsing, arithmetic, calculus, evaluation, and interpolation over configurable coefficient types.",
+  "excludeFolders": ["dist", "node_modules", "coverage", "_"]
+}

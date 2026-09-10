@@ -1,37 +1,42 @@
+'use strict';
 
-var Polynomial = require('polynomial');
+const Polynomial = require('polynomial');
 
-Polynomial.setField("Q");
+Polynomial.setField('Q');
 
-// This implements Newton's method on top of a rational polynomial. The code is highly experimental!
-function factor(P) {
+// Newton iteration over rational coefficients. This example is experimental.
+function toNumber(value) {
+  const scale = 10n ** 15n;
+  return Number(value.s * value.n * scale / value.d) / Number(scale);
+}
 
-    var xn = 1;
+function factor(input) {
+  let polynomial = new Polynomial(input);
+  let derivative = polynomial.derive();
+  const roots = [];
 
-    var F = Polynomial(P); // f(x)
-    var f = F.derive(); // f'(x)
-
-    var res = [];
+  do {
+    let previous;
+    let root = new Polynomial(1).coeff[0];
 
     do {
+      previous = root;
+      root = root.sub(polynomial.eval(root).div(derivative.eval(root)));
+    } while (Math.abs(toNumber(root) - toNumber(previous)) > 1e-10);
 
-        var prev, xn = Polynomial(1).coeff[0];
+    const rootValue = toNumber(root);
+    const nearestInteger = Math.round(rootValue);
+    if (Math.abs(rootValue - nearestInteger) < 1e-7) {
+      root = new Polynomial(nearestInteger).coeff[0];
+    }
 
-        do {
-            prev = xn;
-            xn = xn.sub(F.eval(xn).div(f.eval(xn)));
-        } while (Math.abs(xn.valueOf() - prev.valueOf()) > 1e-10);
+    polynomial = polynomial.div(new Polynomial('x').sub(root));
+    derivative = polynomial.derive();
+    roots.push(root);
+  } while (derivative.degree() >= 0);
 
-        var p = Polynomial("x").sub(xn); // x-x0
-
-        F = F.div(p);
-        f = F.derive();             
-
-        res.push(xn);
-
-    } while (f.degree() >= 0);
-
-    return res;
+  return roots;
 }
-// Result should by ~3, ~4, ~9
-console.log(factor("x^3-16x^2+75x-108").map(x => x.toString()));
+
+// Results are approximately 3, 4, and 9.
+console.log(factor('x^3-16x^2+75x-108').map(root => root.toString()));

@@ -1,21 +1,20 @@
+'use strict';
 
-var Polynomial = require('polynomial');
+const Polynomial = require('polynomial');
 
-// Factorize the complex polynomial ix^2-3x-4x+9
+Polynomial.setField('C');
 
-Polynomial.setField("C");
+const polynomial = new Polynomial('ix^2-13ix+36i');
+const leadingCoefficient = polynomial.coeff[2];
+const linearCoefficient = polynomial.coeff[1];
+const constant = polynomial.coeff[0];
+const discriminant = linearCoefficient
+  .mul(linearCoefficient)
+  .sub(leadingCoefficient.mul(constant).mul(4))
+  .sqrt();
+const denominator = leadingCoefficient.mul(2);
+const firstRoot = linearCoefficient.neg().add(discriminant).div(denominator);
+const secondRoot = linearCoefficient.neg().sub(discriminant).div(denominator);
 
-var x = Polynomial("ix^2-13ix+36i");
-
-// x1,2 = (-b +- sqrt(b^2-4ac)) / (2a)
-var a = x.coeff[2];
-var b = x.coeff[1];
-var c = x.coeff[0];
-
-var D = b.mul(b).sub(a.mul(c).mul(4)).sqrt();
-
-var x1 = b.neg().add(D).div(a.mul(2));
-var x2 = b.neg().sub(D).div(a.mul(2));
-
-// Ouputs (X-9)(X-4)
-console.log("(X" + x1.neg().toString() + ")(X" + x2.neg().toString() + ")");
+// Outputs (X-9)(X-4).
+console.log(`(X${firstRoot.neg()})(X${secondRoot.neg()})`);

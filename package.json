@@ -1,8 +1,9 @@
 {
     "name": "polynomial",
     "title": "Polynomial.js",
-    "version": "1.6.1",
-    "description": "The RAW polynomial library",
+    "version": "2.0.0",
+    "type": "commonjs",
+    "description": "Parse and compute univariate polynomials over real, rational, complex, quaternion, or modular fields",
     "homepage": "https://github.com/rawify/Polynomial.js",
     "bugs": "https://github.com/rawify/Polynomial.js/issues",
     "keywords": [
@@ -13,46 +14,50 @@
         "bigint",
         "complex",
         "rational",
-        "parser"
+        "parser",
+        "derivative",
+        "gcd",
+        "finite-field"
     ],
     "private": false,
     "main": "./dist/polynomial.js",
     "module": "./dist/polynomial.mjs",
-    "browser": "./dist/polynomial.min.js",
+    "browser": "./dist/polynomial.min.mjs",
     "unpkg": "./dist/polynomial.min.js",
-    "types": "./polynomial.d.ts",
+    "types": "./dist/polynomial.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
     "exports": {
         ".": {
             "import": {
-                "types": "./polynomial.d.mts",
+                "types": "./dist/polynomial.d.mts",
                 "default": "./dist/polynomial.mjs"
             },
             "require": {
-                "types": "./polynomial.d.ts",
+                "types": "./dist/polynomial.d.ts",
                 "default": "./dist/polynomial.js"
             },
-            "browser": {
-                "types": "./polynomial.d.ts",
-                "default": "./dist/polynomial.min.js"
-            },
             "default": {
-                "types": "./polynomial.d.ts",
+                "types": "./dist/polynomial.d.ts",
                 "default": "./dist/polynomial.js"
             }
         },
+        "./browser": {
+            "import": {
+                "types": "./dist/polynomial.d.mts",
+                "default": "./dist/polynomial.min.mjs"
+            },
+            "default": "./dist/polynomial.min.js"
+        },
         "./package.json": "./package.json"
-    },
-    "typesVersions": {
-        "<4.7": {
-            "*": [
-                "polynomial.d.ts"
-            ]
-        }
     },
     "sideEffects": false,
     "repository": {
         "type": "git",
-        "url": "git@github.com:rawify/Polynomial.js.git"
+        "url": "git+https://github.com/rawify/Polynomial.js.git"
     },
     "funding": {
         "type": "github",
@@ -65,14 +70,21 @@
     },
     "license": "MIT",
     "engines": {
-        "node": "*"
+        "node": ">=20"
     },
     "directories": {
         "example": "examples"
     },
     "scripts": {
-        "build": "crude-build Polynomial",
-        "test": "mocha tests/*.js"
+        "clean": "node scripts/clean.mjs",
+        "typecheck": "tsc --noEmit",
+        "build:types": "tsc -p tsconfig.build.json",
+        "build:js": "node scripts/build.mjs",
+        "build": "npm run clean && npm run build:types && npm run build:js",
+        "test:types": "tsc -p tests/types/tsconfig.json",
+        "test:runtime": "node --test tests/*.test.js",
+        "test": "npm run build && npm run test:types && npm run test:runtime",
+        "prepublishOnly": "npm test"
     },
     "dependencies": {
         "complex.js": "2.4.2",
@@ -80,7 +92,7 @@
         "quaternion": "2.1.1"
     },
     "devDependencies": {
-        "crude-build": "^0.1.2",
-        "mocha": "*"
+        "esbuild": "^0.25.12",
+        "typescript": "^5.9.3"
     }
 }
